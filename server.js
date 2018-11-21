@@ -5,8 +5,8 @@ const passport = require('passport');
 
 const users = require('./routes/api/users');
 const engineers = require('./routes/api/engineers');
-const fms = require('./routes/api/fms');
-const pms = require('./routes/api/pms');
+const fmanagers = require('./routes/api/fmanagers');
+const pmanagers = require('./routes/api/pmanagers');
 
 const app = express();
 
@@ -16,8 +16,9 @@ app.use(bodyParser.json());
 
 // DB Config
 const db = require('./config/keys').mongoURI;
+const { rds } = require('./config/keys');
 
-// Connect to MongoDB
+// Connect to MongoDB ---
 mongoose
   .connect(db)
   .then(() => console.log('MongoDB Connected'))
@@ -32,8 +33,8 @@ require('./config/passport')(passport);
 // Use Routes
 app.use('/api/users', users);
 app.use('/api/engineers', engineers);
-app.use('/api/fms', fms);
-app.use('/api/pms', pms);
+app.use('/api/fmanagers', fmanagers);
+app.use('/api/pmanagers', pmanagers);
 
 const port = process.env.PORT || 5000;
 
