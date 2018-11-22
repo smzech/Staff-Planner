@@ -17,8 +17,15 @@ class Navbar extends Component {
       <ul className="navbar-nav ml-auto">
         <li className="nav-item">
           <a className="nav-link">
-            {user.username + ' (' + user.privilege + ')'}
+            {isAuthenticated
+              ? user.username + ' (' + user.privilege.toUpperCase() + ')'
+              : null}
           </a>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/dashboard">
+            Dashboard
+          </Link>
         </li>
         <li className="nav-item">
           <a
@@ -26,7 +33,7 @@ class Navbar extends Component {
             onClick={this.onLogoutClick.bind(this)}
             className="nav-link"
           >
-            Logout
+            <i className="fas fa-sign-out-alt text-info mr-1" /> Logout
           </a>
         </li>
       </ul>
@@ -58,14 +65,7 @@ class Navbar extends Component {
           </button>
 
           <div className="collapse navbar-collapse" id="mobile-nav">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/profiles">
-                  {' '}
-                  Dashboard
-                </Link>
-              </li>
-            </ul>
+            <ul className="navbar-nav mr-auto" />
             {isAuthenticated ? authLinks : guestLinks}
           </div>
         </div>

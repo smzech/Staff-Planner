@@ -28,7 +28,11 @@ class Dashboard extends Component {
       }
     }
 
-    return <div>{dashboard}</div>;
+    return (
+      <div className="dashboard">
+        <div className="cotainer">{dashboard}</div>
+      </div>
+    );
   }
 }
 
