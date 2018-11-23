@@ -12,6 +12,7 @@ const validateVacationRequestInput = require('../../validation/vacrequest');
 const Assignment = require('../../models/Assignment');
 const Request = require('../../models/Request');
 
+// **** TEST ROUTES ****
 router.get(
   '/test',
   passport.authenticate('jwt', { session: false }),
@@ -25,25 +26,11 @@ router.get(
     }
   }
 );
-
 router.get('/public', (req, res) => {
   const num = 3;
   res.json(new Date().getUTCDate() + 1);
 });
-
-// TEST ROUTE -- TO BE DELETED
-router.get('/roster', (req, res) => {
-  db.then(conn =>
-    conn.query('select * from Planner.functionalManagers where fmid=1')
-  )
-    .then(([rows, fields]) => res.json(rows))
-    .catch(err => console.log(err));
-
-  // db.query('select * from Planner.functionalManagers', function(err, result) {
-  //   if (err) throw err;
-  //   res.json(result);
-  // });
-});
+// **** END TEST ROUTES ****
 
 // @route   GET api/engineers/assignments
 // @desc    Get engineer user's assignments
@@ -61,6 +48,7 @@ router.get(
     }
 
     Assignment.find({ eid: req.user.uid })
+      .sort({ pid: 1 })
       .then(assignments => {
         if (!assignments) {
           errors.noassignments = 'There are no assigned projects to this user';
@@ -98,7 +86,8 @@ router.post(
       eid: req.user.uid,
       pid: 777,
       returnid: req.user.uid,
-      name: 'vacation',
+      name: 'Vacation',
+      reqtype: 'delta',
       tasks: [
         {
           month: req.body.month,

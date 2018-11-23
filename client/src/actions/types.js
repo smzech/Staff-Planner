@@ -1,7 +1,8 @@
 export const GET_ERRORS = 'GET_ERRORS'; // used for auth login
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER'; // used for auth login
-export const GET_ENGINEERS = 'GET_ENGINEERS';
+export const GET_ROSTER = 'GET_ROSTER';
+export const GET_GLOBAL = 'GET_GLOBAL';
 export const ENGINEERS_LOADING = 'ENGINEERS_LOADING';
 export const GET_ASSIGNMENTS = 'GET_ASSIGNMENTS';
 export const MAKE_ASSIGNMENTS = 'MAKE_ASSIGNMENTS';

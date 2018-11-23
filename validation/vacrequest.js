@@ -18,12 +18,16 @@ module.exports = function validateVactionRequestInput(data) {
     errors.hours = 'Requested hours required';
   }
 
-  if (data.month < 0 || data.month > 12) {
+  if (!Number.isInteger(data.hours)) {
+    errors.hours = 'Requested hours must be an integer between 0 and 160';
+  }
+
+  if (data.month < 0 || data.month > 11) {
     errors.month = 'Requested month is an invalid month';
   }
 
-  if (data.hours < 0) {
-    errors.hours = 'Requested hours cannot be negative';
+  if (data.hours < 1) {
+    errors.hours = 'Requested hours must be 1 or greater';
   }
 
   if (data.hours > 160) {

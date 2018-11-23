@@ -15,6 +15,10 @@ const RequestSchema = new Schema({
     type: String,
     required: true
   },
+  reqtype: {
+    type: String,
+    required: true
+  },
   tasks: [
     {
       month: {
