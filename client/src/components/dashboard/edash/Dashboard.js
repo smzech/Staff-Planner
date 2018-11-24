@@ -67,6 +67,7 @@ class Dashboard extends Component {
       <div className="engineer">
         <div className="container align-top">
           <h1 className="display-4 text-center">ENGINEER DASHBOARD</h1>
+          <br />
           <p className="lead text-muted">Welcome {user.username}</p>
           <div className="btn-group mb-4" role="group">
             <button

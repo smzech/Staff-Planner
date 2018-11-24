@@ -1,6 +1,7 @@
 import { GET_ROSTER, GET_GLOBAL, ENGINEERS_LOADING } from '../actions/types';
 
 const initialState = {
+  engineer: {},
   roster: [],
   global: [],
   loading: false
