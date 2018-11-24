@@ -25,6 +25,8 @@ export const getAssignments = eid => dispatch => {
     );
 };
 
+// Create (or Edit) Assignment
+
 // Set loading state
 export const setAssignmentLoading = () => {
   return {

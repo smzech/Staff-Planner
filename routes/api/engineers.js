@@ -73,6 +73,8 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // fetch all asignments from req.user.id
+    console.log('REQ BODY');
+    console.log(req.body);
     const { errors, isValid } = validateVacationRequestInput(req.body);
 
     //Check Validation
@@ -96,6 +98,7 @@ router.post(
       ]
     };
 
+    console.log('vaction request received!');
     new Request(vacreq).save().then(request => res.json(request));
   }
 );
