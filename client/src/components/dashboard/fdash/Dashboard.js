@@ -4,15 +4,42 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../../common/Spinner';
 import Tabs from '../../common/Tabs';
+import { getRoster, getGlobalRoster } from '../../../actions/engineerActions';
+import RosterItem from './RosterItem';
 
 // FM DASHBOARD
 class Dashboard extends Component {
+  componentDidMount() {
+    this.props.getRoster();
+    this.props.getGlobalRoster();
+  }
+
   render() {
     const { user } = this.props.auth;
     const { engineer, roster, global } = this.props.engineer;
-    const { assignments, loading } = this.props.assignment;
+    const eLoading = this.props.engineer.loading;
+    //const { assignments, loading } = this.props.assignment;
 
     let count = 'COUNT';
+    let rosterContent;
+    let globalRosterContent;
+    let rosterTabs;
+
+    if (roster === null || eLoading) {
+      rosterContent = <Spinner />;
+    } else {
+      rosterContent = roster.map(engineer => (
+        <RosterItem engineer={engineer} key={engineer._id} />
+      ));
+    }
+
+    // if (global === null || eLoading) {
+    //   globalRosterContent = <Spinner />;
+    // } else {
+    //   globalRosterContent = global.map(engineer => (
+    //     <GlobalItem engineer={engineer} key={engineer._id} />
+    //   ));
+    // }
 
     return (
       <div className="functionalManager">
@@ -32,66 +59,34 @@ class Dashboard extends Component {
           </Link>
         </div>
         <Tabs>
-          <div label={<b>Roster</b>}>
-            <table class="table table-sm table-dark">
+          <div label="Roster">
+            <table class="table table-dark table-hover">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
-                  <th scope="col">Handle</th>
+                  <th scope="col">EID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Jan</th>
+                  <th scope="col">Feb</th>
+                  <th scope="col">Mar</th>
+                  <th scope="col">Apr</th>
+                  <th scope="col">May</th>
+                  <th scope="col">Jun</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-              </tbody>
+              <tbody>{rosterContent}</tbody>
             </table>
           </div>
-          <div label={<b>Global Roster</b>}>
-            <table class="table table-hover">
+          <div label="Global Roster">
+            <table class="table table-dark">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">First</th>
+                  <th scope="col">EID</th>
                   <th scope="col">Last</th>
-                  <th scope="col">Handle</th>
+                  <th scope="col">First</th>
+                  <th scope="col">Dept</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-              </tbody>
+              <tbody>HELLO</tbody>
             </table>
           </div>
         </Tabs>
@@ -103,16 +98,18 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
   engineer: PropTypes.object.isRequired,
-  assignments: PropTypes.object.isRequired
+  //assignments: PropTypes.object.isRequired,
+  getGlobalRoster: PropTypes.func.isRequired,
+  getRoster: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  engineer: state.engineer,
-  assignment: state.assignment
+  engineer: state.engineer
+  //assignment: state.assignment
 });
 
 export default connect(
   mapStateToProps,
-  {}
+  { getRoster, getGlobalRoster }
 )(Dashboard);

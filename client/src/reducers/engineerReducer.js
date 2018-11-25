@@ -16,11 +16,15 @@ export default function(state = initialState, action) {
       };
     case GET_ROSTER:
       return {
-        ...state
+        ...state,
+        roster: action.payload,
+        loading: false
       };
     case GET_GLOBAL:
       return {
-        ...state
+        ...state,
+        global: action.payload,
+        loading: false
       };
     default:
       return state;

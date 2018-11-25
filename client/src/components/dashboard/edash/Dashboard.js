@@ -9,14 +9,11 @@ import AssignmentItem from './AssignmentItem';
 
 // ENGINEER DASHBOARD
 class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.getAssignments(this.props.auth.user.eid);
   }
 
+  /* Total hours for each column */
   getTotals = () => {
     const { assignments } = this.props.assignment;
     let cols = [];
@@ -58,11 +55,10 @@ class Dashboard extends Component {
       assignmentsContent = <Spinner />;
     } else {
       assignmentsContent = assignments.map(assignment => (
-        <AssignmentItem assignment={assignment} />
+        <AssignmentItem assignment={assignment} key={assignment._id} />
       ));
     }
 
-    // see devConn dashboard for scenario no assignments
     return (
       <div className="engineer">
         <div className="container align-top">

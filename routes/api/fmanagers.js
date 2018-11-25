@@ -4,26 +4,12 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 // Load Validation
+const validateAssignmentInput = require('../../validation/assignment');
 
 // Load models
 const Engineer = require('../../models/Engineer');
 const Assignment = require('../../models/Assignment');
 const Request = require('../../models/Request');
-
-// TEST ROUTE
-router.get(
-  '/test',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const access = req.user.privilege;
-
-    if (access === 'p') {
-      res.json({ ACCESS: 'GRANTED' });
-    } else {
-      res.json({ ACCESS: 'DENIED' });
-    }
-  }
-);
 
 // @route   GET api/fmanagers/roster
 // @desc    View roster for current FM
@@ -35,13 +21,40 @@ router.get(
     const errors = {};
 
     // search engineer db by fm's ID
-    Engineer.find({ fmid: req.user.uid })
+    // Engineer.({ fmid: req.user.uid })
+    //   .then(engineers => {
+    //     if (!engineers) {
+    //       errors.engineers = 'No engineers on roster';
+    //       return res.status(404).json(errors);
+    //     }
+
+    //     res.json(engineers);
+    //   })
+    //   .catch(err =>
+    //     res.status(404).json({ engineers: 'No engineers on roster' })
+    //   );
+
+    // search enginner db by fmid, aggregate eng's assignments into results
+    Engineer.aggregate([
+      {
+        $lookup: {
+          from: 'assignments',
+          localField: 'eid',
+          foreignField: 'eid',
+          as: 'assignments'
+        }
+      },
+      {
+        $match: {
+          fmid: req.user.uid
+        }
+      }
+    ])
       .then(engineers => {
         if (!engineers) {
           errors.engineers = 'No engineers on roster';
           return res.status(404).json(errors);
         }
-
         res.json(engineers);
       })
       .catch(err =>
@@ -119,16 +132,13 @@ router.get(
           from: 'engineers',
           localField: 'eid',
           foreignField: 'eid',
-          as: 'engs'
+          as: 'eng'
         }
       },
       {
         $match: {
-          'engs.fmid': req.user.uid
+          'eng.fmid': req.user.uid
         }
-      },
-      {
-        $unwind: '$engs'
       }
     ])
       .then(requests => {
@@ -145,19 +155,20 @@ router.post(
   '/assign',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    //const { errors, isValid } = validateAssignmentInput(req.body);
+    const { errors, isValid } = validateAssignmentInput(req.body);
 
     // Check Validation
-    // if (!isValid) {
-    //   return res.status(400).json(errors);
-    // }
-    //console.log(req.body);
-    let sum = 0;
-    for (i in req.body.tasks) {
-      sum += req.body.tasks[i].hours;
-      console.log(req.body.tasks[i]);
+    if (!isValid) {
+      return res.status(400).json(errors);
     }
-    console.log(sum);
+
+    // sum checking Deprecated
+    // let sum = 0;
+    // for (i in req.body.tasks) {
+    //   sum += req.body.tasks[i].hours;
+    //   console.log(req.body.tasks[i]);
+    // }
+    // console.log(sum);
 
     const newAssignment = new Assignment({
       eid: req.body.eid,
@@ -167,7 +178,27 @@ router.post(
       tasks: req.body.tasks
     });
 
-    res.json(newAssignment);
+    Assignment.findOne({ eid: req.body.eid, pid: req.body.pid }).then(
+      assignment => {
+        if (assignment) {
+          // Update Assignment
+          console.log('ALREADY EXISTS...');
+          Assignment.findOneAndUpdate(
+            { eid: req.body.eid, pid: req.body.pid },
+            { $set: { tasks: req.body.tasks } },
+            { new: true }
+          ).then(assignment => res.json(assignment));
+        } else {
+          console.log('CREATING ASSIGNMENT...');
+          // Create Assignment and Save
+          new Assignment(newAssignment)
+            .save()
+            .then(newEntry => res.json(newEntry));
+        }
+      }
+    );
+
+    //res.json(newAssignment); asdfsa
   }
 );
 
@@ -177,7 +208,13 @@ router.post(
 router.delete(
   '/assign',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {}
+  (req, res) => {
+    Assignment.findOneAndRemove({ eid: req.body.eid, pid: req.body.pid }).then(
+      () => {
+        res.json({ success: true });
+      }
+    );
+  }
 );
 
 module.exports = router;

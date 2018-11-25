@@ -15,7 +15,10 @@ import Landing from './components/layout/Landing';
 import Login from './components/auth/Login';
 
 import Dashboard from './components/dashboard/Dashboard';
+// PM Components
 import RequestList from './components/dashboard/fdash/RequestList';
+import EngineerView from './components/dashboard/fdash/EngineerView';
+// FM Components
 
 import './App.css';
 
@@ -58,6 +61,13 @@ class App extends Component {
                   exact
                   path="/request-list"
                   component={RequestList}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/engineer-view"
+                  component={EngineerView}
                 />
               </Switch>
             </div>

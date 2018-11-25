@@ -23,3 +23,7 @@ module.exports = function validateRequestInput(data) {
 };
 
 function initCheck(data) {}
+
+function deltaCheck(data) {}
+
+function deleteCheck(data) {}
