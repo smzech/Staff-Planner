@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Spinner from '../../common/Spinner';
+//import Spinner from '../../common/Spinner';
 import Tabs from '../../common/Tabs';
 
 // FM DASHBOARD
 class Dashboard extends Component {
   render() {
     const { user } = this.props.auth;
-    const { engineer, roster, global } = this.props.engineer;
-    const { assignments, loading } = this.props.assignment;
-
-    let count = 'COUNT';
+    //const { engineer, roster, global } = this.props.engineer;
+    //const { assignments, loading } = this.props.assignment;
 
     return (
       <div className="functionalManager">

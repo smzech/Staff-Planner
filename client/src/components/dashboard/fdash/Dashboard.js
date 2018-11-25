@@ -5,13 +5,16 @@ import { connect } from 'react-redux';
 import Spinner from '../../common/Spinner';
 import Tabs from '../../common/Tabs';
 import { getRoster, getGlobalRoster } from '../../../actions/engineerActions';
+import { getRequestCount } from '../../../actions/requestActions';
 import RosterItem from './RosterItem';
+import GlobalItem from './GlobalItem';
 
 // FM DASHBOARD
 class Dashboard extends Component {
   componentDidMount() {
     this.props.getRoster();
     this.props.getGlobalRoster();
+    this.props.getRequestCount();
   }
 
   render() {
@@ -20,10 +23,10 @@ class Dashboard extends Component {
     const eLoading = this.props.engineer.loading;
     //const { assignments, loading } = this.props.assignment;
 
-    let count = 'COUNT';
+    let count = this.props.request.count;
+    //let count;
     let rosterContent;
     let globalRosterContent;
-    let rosterTabs;
 
     if (roster === null || eLoading) {
       rosterContent = <Spinner />;
@@ -33,13 +36,13 @@ class Dashboard extends Component {
       ));
     }
 
-    // if (global === null || eLoading) {
-    //   globalRosterContent = <Spinner />;
-    // } else {
-    //   globalRosterContent = global.map(engineer => (
-    //     <GlobalItem engineer={engineer} key={engineer._id} />
-    //   ));
-    // }
+    if (global === null || eLoading) {
+      globalRosterContent = <Spinner />;
+    } else {
+      globalRosterContent = global.map(engineer => (
+        <GlobalItem engineer={engineer} key={engineer._id} />
+      ));
+    }
 
     return (
       <div className="functionalManager">
@@ -77,7 +80,7 @@ class Dashboard extends Component {
             </table>
           </div>
           <div label="Global Roster">
-            <table class="table table-dark">
+            <table class="table table-dark table-hover">
               <thead>
                 <tr>
                   <th scope="col">EID</th>
@@ -86,7 +89,7 @@ class Dashboard extends Component {
                   <th scope="col">Dept</th>
                 </tr>
               </thead>
-              <tbody>HELLO</tbody>
+              <tbody>{globalRosterContent}</tbody>
             </table>
           </div>
         </Tabs>
@@ -98,18 +101,21 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
   engineer: PropTypes.object.isRequired,
+  request: PropTypes.object.isRequired,
   //assignments: PropTypes.object.isRequired,
   getGlobalRoster: PropTypes.func.isRequired,
-  getRoster: PropTypes.func.isRequired
+  getRoster: PropTypes.func.isRequired,
+  getRequestCount: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  engineer: state.engineer
+  engineer: state.engineer,
+  request: state.request
   //assignment: state.assignment
 });
 
 export default connect(
   mapStateToProps,
-  { getRoster, getGlobalRoster }
+  { getRoster, getGlobalRoster, getRequestCount }
 )(Dashboard);

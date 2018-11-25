@@ -22,9 +22,7 @@ class GlobalItem extends Component {
   };
 
   render() {
-    const { assignment } = this.props;
     let cols = this.getCols();
-
     return cols;
   }
 }

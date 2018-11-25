@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { getGlobalRoster } from '../../../actions/engineerActions';
 
 class RequestList extends Component {
+  componentDidMount() {
+    this.props.getGlobalRoster();
+  }
+
   render() {
     return (
       <div className="request-list">
@@ -20,7 +25,11 @@ class RequestList extends Component {
   }
 }
 
+RequestList.propTypes = {
+  getGlobalRoster: PropTypes.func.isRequired
+};
+
 export default connect(
   null,
-  {}
+  { getGlobalRoster }
 )(withRouter(RequestList));

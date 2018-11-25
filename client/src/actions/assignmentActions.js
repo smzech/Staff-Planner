@@ -6,8 +6,8 @@ import {
   CLEAR_ERRORS
 } from '../actions/types';
 
-// Get Assignments
-export const getAssignments = eid => dispatch => {
+// Get Assignments for Engineer User
+export const getAssignments = () => dispatch => {
   dispatch(setAssignmentLoading());
   axios
     .get('api/engineers/assignments')
@@ -19,8 +19,27 @@ export const getAssignments = eid => dispatch => {
     )
     .catch(err =>
       dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Get Assignments by EID, for PM or FM use
+export const getAssignmentsByID = eid => dispatch => {
+  dispatch(setAssignmentLoading());
+  axios
+    .post('api/fmanagers/assignments', eid)
+    .then(res =>
+      dispatch({
         type: GET_ASSIGNMENTS,
-        payload: null
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };

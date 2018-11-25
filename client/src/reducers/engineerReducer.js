@@ -1,4 +1,9 @@
-import { GET_ROSTER, GET_GLOBAL, ENGINEERS_LOADING } from '../actions/types';
+import {
+  GET_ROSTER,
+  GET_GLOBAL,
+  ENGINEERS_LOADING,
+  GET_ENGINEER
+} from '../actions/types';
 
 const initialState = {
   engineer: {},
@@ -18,6 +23,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         roster: action.payload,
+        loading: false
+      };
+    case GET_ENGINEER:
+      return {
+        ...state,
+        engineer: action.payload,
         loading: false
       };
     case GET_GLOBAL:

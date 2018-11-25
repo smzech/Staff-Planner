@@ -10,7 +10,7 @@ import AssignmentItem from './AssignmentItem';
 // ENGINEER DASHBOARD
 class Dashboard extends Component {
   componentDidMount() {
-    this.props.getAssignments(this.props.auth.user.eid);
+    this.props.getAssignments();
   }
 
   /* Total hours for each column */
@@ -104,7 +104,8 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
-  assignments: PropTypes.object.isRequired
+  assignments: PropTypes.object.isRequired,
+  getAssignments: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

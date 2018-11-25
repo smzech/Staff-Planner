@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
   GET_REQUESTS,
+  GET_REQUEST_COUNT,
   MAKE_REQUEST,
   REQUESTS_LOADING,
   GET_ERRORS,
@@ -30,6 +31,24 @@ export const makeVacationRequest = requestData => dispatch => {
 // create request (PMs only)
 
 // Get Requests
+
+// Get Request Count
+export const getRequestCount = () => dispatch => {
+  axios
+    .get('api/fmanagers/reqcount')
+    .then(res => {
+      dispatch({
+        type: GET_REQUEST_COUNT,
+        payload: res.data
+      });
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 // Clear Success
 export const clearSuccess = () => {

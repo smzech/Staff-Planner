@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { GET_ROSTER, GET_GLOBAL, ENGINEERS_LOADING } from '../actions/types';
+import {
+  GET_ROSTER,
+  GET_ENGINEER,
+  GET_GLOBAL,
+  ENGINEERS_LOADING,
+  GET_ERRORS
+} from '../actions/types';
 
 // Get Roster
 export const getRoster = () => dispatch => {
@@ -14,8 +20,8 @@ export const getRoster = () => dispatch => {
     )
     .catch(err =>
       dispatch({
-        type: GET_ROSTER,
-        payload: null
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };
@@ -33,8 +39,27 @@ export const getGlobalRoster = () => dispatch => {
     )
     .catch(err =>
       dispatch({
-        type: GET_GLOBAL,
-        payload: null
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Get Engineer
+export const getEngineer = eid => dispatch => {
+  dispatch(setEngineersLoading());
+  axios
+    .post('api/fmanagers/engineer', eid)
+    .then(res =>
+      dispatch({
+        type: GET_ENGINEER,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };

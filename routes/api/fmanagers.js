@@ -63,6 +63,30 @@ router.get(
   }
 );
 
+// @route   POST api/fmanagers/engineer
+// @desc    retrieve single engineer
+// @access  Private
+router.post(
+  '/engineer',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+
+    Engineer.findOne({ eid: req.body.eid })
+      .then(engineer => {
+        if (!engineer) {
+          errors.engineer = 'Could not find engineer';
+          return res.status(404).json(errors);
+        }
+
+        res.json(engineer);
+      })
+      .catch(err =>
+        res.status(404).json({ engineer: 'Error retrieving engineer' })
+      );
+  }
+);
+
 // @route   GET api/fmanagers/global
 // @desc    View global engineering roster
 // @access  Private
@@ -93,13 +117,13 @@ router.get(
 // @route   POST api/fmanagers/assignments
 // @desc    View assignments for a given engineer
 // @access  Private
+// BROKEN....
 router.post(
   '/assignments',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
 
-    console.log(req.body.eid);
     Assignment.find({ eid: req.body.eid })
       .then(assignments => {
         if (!assignments) {
@@ -143,6 +167,37 @@ router.get(
     ])
       .then(requests => {
         res.json(requests);
+      })
+      .catch(err => res.status(404).json({ requests: 'No requests found' }));
+  }
+);
+
+// @route   GET api/fmanagers/reqcount
+// @desc    get number of requests
+// @access  Private
+router.get(
+  '/reqcount',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+
+    Request.aggregate([
+      {
+        $lookup: {
+          from: 'engineers',
+          localField: 'eid',
+          foreignField: 'eid',
+          as: 'eng'
+        }
+      },
+      {
+        $match: {
+          'eng.fmid': req.user.uid
+        }
+      }
+    ])
+      .then(requests => {
+        res.json(requests.length);
       })
       .catch(err => res.status(404).json({ requests: 'No requests found' }));
   }
@@ -197,8 +252,6 @@ router.post(
         }
       }
     );
-
-    //res.json(newAssignment); asdfsa
   }
 );
 

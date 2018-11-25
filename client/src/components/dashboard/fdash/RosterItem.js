@@ -4,18 +4,25 @@ import React, { Component } from 'react';
 // import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 
-import EngView from './EngineerView';
-
 class RosterItem extends Component {
   getCols = () => {
     const { engineer } = this.props;
-    let name = engineer.first + ' ' + engineer.last;
+    //let name = engineer.first + ' ' + engineer.last;
     let cols = [];
 
+    //{`/engineer-view/${engineer.eid}`}
     cols.push(
       <tr>
         <th scope="row" className="text-light">
-          <Link to="/engineer-view" className="roster-link">
+          <Link
+            className="roster-link"
+            to={{
+              pathname: '/engineer-view',
+              state: {
+                eid: engineer.eid
+              }
+            }}
+          >
             {engineer.eid}
           </Link>
         </th>
@@ -61,9 +68,7 @@ class RosterItem extends Component {
   };
 
   render() {
-    const { assignment } = this.props;
     let cols = this.getCols();
-
     return cols;
   }
 }
