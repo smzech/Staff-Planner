@@ -18,6 +18,7 @@ import Dashboard from './components/dashboard/Dashboard';
 // PM Components
 import RequestList from './components/dashboard/fdash/RequestList';
 import EngineerView from './components/dashboard/fdash/EngineerView';
+import Assignment from './components/dashboard/fdash/Assignment';
 // FM Components
 
 import './App.css';
@@ -30,7 +31,6 @@ if (localStorage.jwtToken) {
   const decoded = jwt_decode(localStorage.jwtToken);
   // Set user and isAuthenticated
   store.dispatch(setCurrentUser(decoded));
-
   // Check for expired token
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
@@ -69,6 +69,9 @@ class App extends Component {
                   path="/engineer-view"
                   component={EngineerView}
                 />
+              </Switch>
+              <Switch>
+                <PrivateRoute exact path="/assignment" component={Assignment} />
               </Switch>
             </div>
             <Footer />

@@ -9,7 +9,9 @@ import { getRequestCount } from '../../../actions/requestActions';
 import RosterItem from './RosterItem';
 import GlobalItem from './GlobalItem';
 
-// FM DASHBOARD
+// @name: FM DASHBOARD
+// @route: /dashboard
+// @desc: home page for PM logins
 class Dashboard extends Component {
   componentDidMount() {
     this.props.getRoster();
@@ -47,9 +49,9 @@ class Dashboard extends Component {
     return (
       <div className="functionalManager">
         <div className="container align-top">
-          <h1 className="display-4 text-center">
+          <h3 className="display-4 text-center">
             FUNCTIONAL MANAGER DASHBOARD
-          </h1>
+          </h3>
           <br />
           <p className="lead text-muted">Welcome {user.username}</p>
         </div>

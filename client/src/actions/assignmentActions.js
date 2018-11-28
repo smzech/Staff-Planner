@@ -6,7 +6,7 @@ import {
   CLEAR_ERRORS
 } from '../actions/types';
 
-// Get Assignments for Engineer User
+// Get Assignments for ENGINEER User
 export const getAssignments = () => dispatch => {
   dispatch(setAssignmentLoading());
   axios

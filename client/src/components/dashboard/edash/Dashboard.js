@@ -62,7 +62,7 @@ class Dashboard extends Component {
     return (
       <div className="engineer">
         <div className="container align-top">
-          <h1 className="display-4 text-center">ENGINEER DASHBOARD</h1>
+          <h3 className="display-4 text-center">ENGINEER DASHBOARD</h3>
           <br />
           <p className="lead text-muted">Welcome {user.username}</p>
           <div className="btn-group mb-4" role="group">
@@ -86,8 +86,7 @@ class Dashboard extends Component {
                 <th scope="col">Jun</th>
               </tr>
             </thead>
-            {assignmentsContent}
-            <tbody />
+            <tbody>{assignmentsContent}</tbody>
             <tfoot className="bg-info">
               <tr>
                 <th scope="col">Totals:</th>

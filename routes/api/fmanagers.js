@@ -149,7 +149,7 @@ router.get(
     const errors = {};
     // consider passing roster from component state
 
-    console.log(req.user.uid);
+    //console.log(req.user.uid);
     Request.aggregate([
       {
         $lookup: {

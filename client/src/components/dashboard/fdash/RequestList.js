@@ -2,14 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { getGlobalRoster } from '../../../actions/engineerActions';
+import Spinner from '../../common/Spinner';
+import { getRequests } from '../../../actions/requestActions';
+import RequestCard from './RequestCard';
 
 class RequestList extends Component {
   componentDidMount() {
-    this.props.getGlobalRoster();
+    this.props.getRequests();
   }
 
   render() {
+    const { requests, loading } = this.props.request;
+    let requestContent;
+
+    if (requests === null || loading) {
+      requestContent = <Spinner />;
+    } else {
+      requestContent = requests.map(request => (
+        <RequestCard request={request} key={request._id} />
+      ));
+    }
+
     return (
       <div className="request-list">
         <div className="container">
@@ -19,6 +32,7 @@ class RequestList extends Component {
             </Link>
           </div>
           <h3>REQUEST LIST</h3>
+          {requestContent}
         </div>
       </div>
     );
@@ -26,10 +40,15 @@ class RequestList extends Component {
 }
 
 RequestList.propTypes = {
-  getGlobalRoster: PropTypes.func.isRequired
+  getRequests: PropTypes.func.isRequired,
+  request: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => ({
+  request: state.request
+});
+
 export default connect(
-  null,
-  { getGlobalRoster }
+  mapStateToProps,
+  { getRequests }
 )(withRouter(RequestList));

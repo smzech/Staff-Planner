@@ -23,7 +23,9 @@ export default function(state = initialState, action) {
       };
     case GET_REQUESTS:
       return {
-        ...state
+        ...state,
+        requests: action.payload,
+        loading: false
       };
     case GET_REQUEST_COUNT:
       return {

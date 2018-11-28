@@ -79,3 +79,24 @@ body {
 .roster-link {
   color: white;
 }
+
+/* CELL COLORING */
+.RequestRow {
+  background-color: rgb(201, 226, 253);
+}
+
+/* ICONS */
+.RequestIcon {
+  /*broken?*/
+  size: 9x;
+}
+
+.fa-check-circle {
+  color: rgb(12, 177, 12);
+  font-size: 90px;
+}
+
+.fa-times-circle {
+  color: red;
+  font-size: 90px;
+}

@@ -31,6 +31,23 @@ export const makeVacationRequest = requestData => dispatch => {
 // create request (PMs only)
 
 // Get Requests
+export const getRequests = () => dispatch => {
+  dispatch(setRequestsLoading());
+  axios
+    .get('api/fmanagers/requests')
+    .then(res => {
+      dispatch({
+        type: GET_REQUESTS,
+        payload: res.data
+      });
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 // Get Request Count
 export const getRequestCount = () => dispatch => {
@@ -48,6 +65,13 @@ export const getRequestCount = () => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+// Set loading state
+export const setRequestsLoading = () => {
+  return {
+    type: REQUESTS_LOADING
+  };
 };
 
 // Clear Success
