@@ -86,17 +86,16 @@ body {
 }
 
 /* ICONS */
-.RequestIcon {
+.fa-info-circle {
   /*broken?*/
-  size: 9x;
+  font-size: 50x;
 }
 
 .fa-check-circle {
-  color: rgb(12, 177, 12);
-  font-size: 90px;
+  /* color: rgb(12, 177, 12); */
+  font-size: 40px;
 }
 
 .fa-times-circle {
-  color: red;
-  font-size: 90px;
+  font-size: 40px;
 }

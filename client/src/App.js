@@ -15,11 +15,14 @@ import Landing from './components/layout/Landing';
 import Login from './components/auth/Login';
 
 import Dashboard from './components/dashboard/Dashboard';
-// PM Components
+// FM Components
 import RequestList from './components/dashboard/fdash/RequestList';
 import EngineerView from './components/dashboard/fdash/EngineerView';
 import Assignment from './components/dashboard/fdash/Assignment';
+import EditAssignment from './components/dashboard/fdash/EditAssignment';
+
 // FM Components
+// ***TODO
 
 import './App.css';
 
@@ -72,6 +75,13 @@ class App extends Component {
               </Switch>
               <Switch>
                 <PrivateRoute exact path="/assignment" component={Assignment} />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/edit-assignment"
+                  component={EditAssignment}
+                />
               </Switch>
             </div>
             <Footer />

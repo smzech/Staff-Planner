@@ -3,6 +3,7 @@ import {
   GET_REQUESTS,
   GET_REQUEST_COUNT,
   MAKE_REQUEST,
+  DELETE_REQUEST,
   REQUESTS_LOADING,
   GET_ERRORS,
   CLEAR_ERRORS,
@@ -58,6 +59,26 @@ export const getRequestCount = () => dispatch => {
         type: GET_REQUEST_COUNT,
         payload: res.data
       });
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Delete a Request
+export const deleteRequest = (id, history) => dispatch => {
+  console.log(id);
+  axios
+    .post('api/fmanagers/delete-request', id)
+    .then(res => {
+      dispatch({
+        type: DELETE_REQUEST,
+        payload: id
+      });
+      history.push('/dashboard');
     })
     .catch(err =>
       dispatch({

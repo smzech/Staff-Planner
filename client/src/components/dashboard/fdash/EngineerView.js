@@ -70,10 +70,10 @@ class EngineerView extends Component {
               Go Back
             </Link>
           </div>
-          <h3>ENGINEER VIEW SHOW 1 ENG WITH ASSIGNMENTS</h3>
-          <div>
-            PAGE FOR EID: {JSON.stringify(this.props.location.state.eid)}
-          </div>
+          <h3>
+            <span className="mr-3">ASSIGNMENTS FOR:</span>
+            <span>{JSON.stringify(this.props.location.state.eid)}</span>
+          </h3>
           <table className="table table-hover text-center">
             <thead className="thead-dark">
               <tr>

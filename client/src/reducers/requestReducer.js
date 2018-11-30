@@ -3,7 +3,8 @@ import {
   GET_REQUEST_COUNT,
   MAKE_REQUEST,
   REQUESTS_LOADING,
-  CLEAR_SUCCESS
+  CLEAR_SUCCESS,
+  DELETE_REQUEST
 } from '../actions/types';
 
 const initialState = {
@@ -37,6 +38,13 @@ export default function(state = initialState, action) {
         ...state,
         requests: [action.payload, ...state.requests],
         success: true
+      };
+    case DELETE_REQUEST:
+      return {
+        ...state,
+        requests: state.requests.filter(
+          request => request._id !== action.payload
+        )
       };
     case CLEAR_SUCCESS:
       return {

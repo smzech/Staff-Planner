@@ -19,14 +19,6 @@ class RequestItem extends Component {
         cols[tasks[i].month] = <td className="RequestRow">{tasks[i].hours}</td>;
     }
 
-    cols.push(
-      <td>
-        <button type="button" class="btn btn-primary">
-          Edit
-        </button>
-      </td>
-    );
-
     return cols;
   };
 

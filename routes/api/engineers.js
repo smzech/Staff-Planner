@@ -3,8 +3,6 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-const db = require('../../database/rdsConnector');
-
 // Load Validation
 const validateVacationRequestInput = require('../../validation/vacrequest');
 
@@ -26,10 +24,6 @@ router.get(
     }
   }
 );
-router.get('/public', (req, res) => {
-  const num = 3;
-  res.json(new Date().getUTCDate() + 1);
-});
 // **** END TEST ROUTES ****
 
 // @route   GET api/engineers/assignments

@@ -7,8 +7,18 @@ import AssignmentItem from './AssignmentItem';
 import RequestItem from './RequestItem';
 import { getAssignmentsByID } from '../../../actions/assignmentActions';
 import { getEngineer } from '../../../actions/engineerActions';
+import { deleteRequest } from '../../../actions/requestActions';
 
+// @name: Assignment View
+// @route: /dashboard
+// @desc: home page for PM logins
 class Assignment extends Component {
+  constructor(props) {
+    super(props);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onReject = this.onReject.bind(this);
+  }
+
   componentDidMount() {
     const { eid } = this.props.location.state.request;
     const engID = {
@@ -57,6 +67,24 @@ class Assignment extends Component {
     return cols;
   };
 
+  onSubmit(e) {
+    e.preventDefault();
+
+    // submit request as an assignment
+    this.state.test = 'SUBMIT';
+  }
+
+  onReject(e) {
+    e.preventDefault();
+
+    // handle request rejection
+    const { _id } = this.props.location.state.request;
+    const reqID = {
+      id: _id
+    };
+    this.props.deleteRequest(reqID, this.props.history);
+  }
+
   render() {
     const { request } = this.props.location.state;
     const { assignments, loading } = this.props.assignment;
@@ -80,7 +108,23 @@ class Assignment extends Component {
               Go Back
             </Link>
           </div>
-          <h3>Review Request</h3>
+          <h3>
+            <span className="mr-4">Review Request</span>
+            <span>
+              <button type="submit" className="btn btn-info text-center mr-2">
+                <i className="far fa-check-circle mr-2 align-middle" />
+                <b>Accept</b>
+              </button>
+              <button
+                onClick={this.onReject}
+                className="btn btn-danger text-center ml-2"
+              >
+                <i className="far fa-times-circle mr-2 align-middle" />
+                <b>Reject</b>
+              </button>
+            </span>
+          </h3>
+          <br />
           <table className="table table-hover text-center">
             <thead className="thead-dark">
               <tr>
@@ -104,16 +148,6 @@ class Assignment extends Component {
               </tr>
             </tfoot>
           </table>
-          <div className="text-center">
-            <span className="center">
-              <a className="btn">
-                <i className="far fa-check-circle mr-3" />
-              </a>
-              <a className="btn">
-                <i className="far fa-times-circle ml-3" />
-              </a>
-            </span>
-          </div>
         </div>
       </div>
     );
@@ -125,7 +159,8 @@ Assignment.propTypes = {
   engineer: PropTypes.object.isRequired,
   assignment: PropTypes.object.isRequired,
   getAssignmentsByID: PropTypes.func.isRequired,
-  getEngineer: PropTypes.func.isRequired
+  getEngineer: PropTypes.func.isRequired,
+  deleteRequest: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -136,29 +171,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getAssignmentsByID, getEngineer }
+  { getAssignmentsByID, getEngineer, deleteRequest }
 )(Assignment);
-
-/* OLD */
-// @name: Assignment View
-// @route: /dashboard
-// @desc: home page for PM logins
-// export default class Assignment extends Component {
-//   render() {
-//     return (
-//       <div className="assignment">
-//         <div className="container">
-//           <div className="row">
-//             <Link to="/request-list" className="btn btn-light">
-//               Go Back
-//             </Link>
-//           </div>
-//           <h3>ASSIGNMENT VIEW SEE REQUEST WITH CURRENT ASSIGNMENTS</h3>
-//           {JSON.stringify(this.props.location.state.request)}
-//         </div>
-//       </div>
-//     );
-//   }
-// }
-
-//{this.props.history.push('/request-list')}

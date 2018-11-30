@@ -117,7 +117,6 @@ router.get(
 // @route   POST api/fmanagers/assignments
 // @desc    View assignments for a given engineer
 // @access  Private
-// BROKEN....
 router.post(
   '/assignments',
   passport.authenticate('jwt', { session: false }),
@@ -172,6 +171,27 @@ router.get(
   }
 );
 
+// @route   POST api/fmanagers/delete-request
+// @desc    delete a request, post to receive id
+// @access  Private
+router.post(
+  '/delete-request',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+    console.log(JSON.stringify(req.body));
+
+    console.log(req.user.uid);
+    Request.findOneAndDelete({ _id: req.body.id })
+      .then(() => {
+        res.json({ success: true });
+      })
+      .catch(err =>
+        res.status(404).json({ requests: 'error deleting request' })
+      );
+  }
+);
+
 // @route   GET api/fmanagers/reqcount
 // @desc    get number of requests
 // @access  Private
@@ -216,14 +236,6 @@ router.post(
     if (!isValid) {
       return res.status(400).json(errors);
     }
-
-    // sum checking Deprecated
-    // let sum = 0;
-    // for (i in req.body.tasks) {
-    //   sum += req.body.tasks[i].hours;
-    //   console.log(req.body.tasks[i]);
-    // }
-    // console.log(sum);
 
     const newAssignment = new Assignment({
       eid: req.body.eid,

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
 // import classnames from 'classnames';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class AssignmentItem extends Component {
   createTasks = () => {
@@ -21,9 +21,17 @@ class AssignmentItem extends Component {
 
     cols.push(
       <td>
-        <button type="button" class="btn btn-primary">
+        <Link
+          className="btn btn-primary"
+          to={{
+            pathname: '/edit-assignment',
+            state: {
+              assignment: this.props.assignment
+            }
+          }}
+        >
           Edit
-        </button>
+        </Link>
       </td>
     );
 
