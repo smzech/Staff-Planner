@@ -7,11 +7,11 @@ const ProjectManagerSchema = new Schema({
     type: Number,
     required: true
   },
-  first: {
+  last: {
     type: String,
     required: true
   },
-  last: {
+  first: {
     type: String,
     required: true
   },

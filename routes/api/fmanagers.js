@@ -179,9 +179,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
-    console.log(JSON.stringify(req.body));
 
-    console.log(req.user.uid);
     Request.findOneAndDelete({ _id: req.body.id })
       .then(() => {
         res.json({ success: true });
