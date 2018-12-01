@@ -27,7 +27,7 @@ class ProjectCard extends Component {
             <div className="card-body">
               <div className="row text-center">
                 <h3 className="text-center ml-3">
-                  <span className="mr-3">PROJECT:</span>
+                  <span className="mr-3">Project:</span>
                   <span>{project.name}</span>
                 </h3>
               </div>

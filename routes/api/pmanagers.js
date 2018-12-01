@@ -112,7 +112,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
-    console.log(typeof req.body.pid);
+
     Assignment.aggregate([
       {
         $lookup: {

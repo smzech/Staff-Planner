@@ -6,8 +6,10 @@ import Spinner from '../../common/Spinner';
 import Tabs from '../../common/Tabs';
 import { getGlobalRoster } from '../../../actions/engineerActions';
 import { getProjects } from '../../../actions/projectActions';
+import { getOutstandingRequests } from '../../../actions/requestActions';
 import ProjectCard from './ProjectCard';
 import GlobalItem from './GlobalItem';
+import RequestCard from './RequestCard';
 
 // @name: PM DASHBOARD
 // @route: /dashboard
@@ -15,21 +17,24 @@ import GlobalItem from './GlobalItem';
 class Dashboard extends Component {
   componentDidMount() {
     // get projects
-    this.props.getGlobalRoster();
     this.props.getProjects();
+    this.props.getGlobalRoster();
+    this.props.getOutstandingRequests();
   }
 
   render() {
     const { user } = this.props.auth;
     const { projects } = this.props.project;
     const { global } = this.props.engineer;
+    const { requests } = this.props.request;
     const pLoading = this.props.project.loading;
     const eLoading = this.props.engineer.loading;
+    const rLoading = this.props.request.loading;
 
     let projectContent;
     let globalRosterContent;
+    let requestContent;
     //let rosterContent;
-    //let requestContent;
 
     if (projects === null || pLoading) {
       projectContent = <Spinner />;
@@ -44,6 +49,14 @@ class Dashboard extends Component {
     } else {
       globalRosterContent = global.map(engineer => (
         <GlobalItem engineer={engineer} key={engineer._id} />
+      ));
+    }
+
+    if (requests === null || rLoading) {
+      requestContent = <Spinner />;
+    } else {
+      requestContent = requests.map(request => (
+        <RequestCard request={request} key={request._id} />
       ));
     }
 
@@ -70,7 +83,7 @@ class Dashboard extends Component {
               <tbody>{globalRosterContent}</tbody>
             </table>
           </div>
-          <div label="Outstanding Requests" />
+          <div label="Outstanding Requests">{requestContent}</div>
         </Tabs>
       </div>
     );
@@ -81,19 +94,22 @@ Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
   engineer: PropTypes.object.isRequired,
   assignment: PropTypes.object.isRequired,
+  request: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
   getProjects: PropTypes.func.isRequired,
-  getGlobalRoster: PropTypes.func.isRequired
+  getGlobalRoster: PropTypes.func.isRequired,
+  getOutstandingRequests: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
   engineer: state.engineer,
   assignment: state.assignment,
+  request: state.request,
   project: state.project
 });
 
 export default connect(
   mapStateToProps,
-  { getProjects, getGlobalRoster }
+  { getProjects, getGlobalRoster, getOutstandingRequests }
 )(Dashboard);

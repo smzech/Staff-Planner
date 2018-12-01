@@ -50,8 +50,12 @@ class ProjectRosterItem extends Component {
 
     return (
       <tr>
-        <th scope="row">{assignment.engineer[0].eid}</th>
-        <td scope="row">{assignment.engineer[0].last}</td>
+        <th scope="row">
+          {assignment.engineer ? assignment.engineer[0].eid : null}
+        </th>
+        <td scope="row">
+          {assignment.engineer ? assignment.engineer[0].last : null}
+        </td>
         {tasks}
       </tr>
     );

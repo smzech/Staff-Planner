@@ -6,15 +6,15 @@ import { Link } from 'react-router-dom';
 
 class RequestCard extends Component {
   render() {
-    const { request } = this.props;
+    const { request, loading } = this.props;
 
     let requestCardContent;
 
-    if (request === null) {
+    if (request === null || loading) {
       requestCardContent = <h3>NO CURRENT REQUESTS</h3>;
     } else {
       requestCardContent = (
-        <div className="card card-body mb-3">
+        <div className="card bg-dark text-white card-body mb-3">
           <div className="row">
             <div className="col-md-2">
               <p className="text-center">
@@ -31,7 +31,7 @@ class RequestCard extends Component {
               </p>
               <p>
                 <b>Requesting: </b>
-                {request.eng[0].last}
+                {request.eng ? request.eng[0].last : null}
               </p>
               <span>
                 <Link
@@ -58,11 +58,13 @@ class RequestCard extends Component {
 
 RequestCard.propTypes = {
   request: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  loading: state.request.loading
 });
 
 export default connect(

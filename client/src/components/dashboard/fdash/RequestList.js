@@ -32,6 +32,7 @@ class RequestList extends Component {
             </Link>
           </div>
           <h3>REQUEST LIST</h3>
+          <br />
           {requestContent}
         </div>
       </div>

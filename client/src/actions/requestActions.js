@@ -31,7 +31,7 @@ export const makeVacationRequest = requestData => dispatch => {
 
 // create request (PMs only)
 
-// Get Requests
+// Get Requests for FMs
 export const getRequests = () => dispatch => {
   dispatch(setRequestsLoading());
   axios
@@ -57,6 +57,25 @@ export const getRequestCount = () => dispatch => {
     .then(res => {
       dispatch({
         type: GET_REQUEST_COUNT,
+        payload: res.data
+      });
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Get Outstanding Requests for PMs
+export const getOutstandingRequests = () => dispatch => {
+  dispatch(setRequestsLoading());
+  axios
+    .get('api/pmanagers/outstanding')
+    .then(res => {
+      dispatch({
+        type: GET_REQUESTS,
         payload: res.data
       });
     })
