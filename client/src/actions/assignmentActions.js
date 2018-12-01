@@ -44,6 +44,25 @@ export const getAssignmentsByID = eid => dispatch => {
     );
 };
 
+// Get project's roster
+export const getProjectAssignments = pid => dispatch => {
+  dispatch(setAssignmentLoading());
+  axios
+    .post('api/pmanagers/assignments', pid)
+    .then(res =>
+      dispatch({
+        type: GET_ASSIGNMENTS,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Create (or Edit) Assignment
 
 // Set loading state

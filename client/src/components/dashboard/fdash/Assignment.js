@@ -10,8 +10,8 @@ import { getEngineer } from '../../../actions/engineerActions';
 import { deleteRequest } from '../../../actions/requestActions';
 
 // @name: Assignment View
-// @route: /dashboard
-// @desc: home page for PM logins
+// @route: /assignment
+// @desc: accept of reject an assignment for and engineer
 class Assignment extends Component {
   constructor(props) {
     super(props);

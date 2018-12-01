@@ -99,3 +99,19 @@ body {
 .fa-times-circle {
   font-size: 40px;
 }
+
+.projectCard {
+  text-decoration: none !important;
+  width: 30rem;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.425);
+}
+
+/* NEEDED? */
+a.custom-card,
+a.custom-card:hover {
+  color: inherit;
+  text-align: center;
+}

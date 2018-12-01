@@ -11,7 +11,7 @@ import GlobalItem from './GlobalItem';
 
 // @name: FM DASHBOARD
 // @route: /dashboard
-// @desc: home page for PM logins
+// @desc: home page for FM logins
 class Dashboard extends Component {
   componentDidMount() {
     this.props.getRoster();

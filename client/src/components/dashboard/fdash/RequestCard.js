@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 class RequestCard extends Component {
   render() {
     const { request } = this.props;
-    // CHECK FOR NULL REQUESTS
 
     let requestCardContent;
 

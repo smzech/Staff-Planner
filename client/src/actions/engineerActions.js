@@ -4,10 +4,11 @@ import {
   GET_ENGINEER,
   GET_GLOBAL,
   ENGINEERS_LOADING,
-  GET_ERRORS
+  GET_ERRORS,
+  GET_ASSIGNMENTS
 } from '../actions/types';
 
-// Get Roster
+// Get FM's Roster
 export const getRoster = () => dispatch => {
   dispatch(setEngineersLoading());
   axios

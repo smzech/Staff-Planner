@@ -34,10 +34,9 @@ router.get(
   (req, res) => {
     const errors = {};
 
-    console.log(req.user.uid);
+    //console.log(req.user.uid);
     ProjectManager.findOne({ pmid: req.user.uid })
       .then(pm => {
-        console.log('in then block...');
         if (!pm) {
           errors.pm = 'pm does not exist!!!';
           return res.status(404).json(errors);
@@ -52,25 +51,19 @@ router.get(
 // @route   POST api/pmanagers/roster
 // @desc    Get roster from a given project from receive PID
 // @access  Private
+// @note: may not be needed as /assignments can replace this
 router.post(
   '/roster',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
 
-    console.log('fmid: ' + req.user.uid);
-    console.log('pid: ' + req.body.pid);
+    //console.log('fmid: ' + req.user.uid);
+    //console.log('pid: ' + req.body.pid);
 
-    Engineer.aggregate([
-      {
-        $lookup: {
-          from: 'assignments',
-          localField: 'eid',
-          foreignField: 'eid',
-          as: 'assignments'
-        }
-      }
-    ])
+    Engineer.find({
+      projects: req.body.pid
+    })
       .then(engineers => {
         if (!engineers) {
           errors.engineers = 'No engineers on roster';
@@ -111,13 +104,70 @@ router.get(
   }
 );
 
-// @route   GET api/pmanagers/assignments
-// @desc    View assignments for a given engineer
+// @route   POST api/pmanagers/assignments
+// @desc    View assignments on a given project ID
 // @access  Private
+router.post(
+  '/assignments',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+    console.log(typeof req.body.pid);
+    Assignment.aggregate([
+      {
+        $lookup: {
+          from: 'engineers',
+          localField: 'eid',
+          foreignField: 'eid',
+          as: 'engineer'
+        }
+      },
+      {
+        $match: {
+          pid: req.body.pid
+        }
+      }
+    ])
+      .then(assignments => {
+        if (!assignments) {
+          errors.assignments = 'No assignments found';
+          return res.status(404).json(errors);
+        }
+        res.json(assignments);
+      })
+      .catch(err =>
+        res.status(404).json({ assignments: 'Could not get assignments' })
+      );
+  }
+);
 
 // @route   POST api/pmanagers/request
 // @desc    Make a request
 // @access  Private
+
+// @route   POST api/pmanagers/outstanding
+// @desc    View requests
+// @access  Private
+router.get(
+  '/outstanding',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+
+    //console.log(req.user.uid);
+    Request.find({ returnid: req.user.uid })
+      .then(requests => {
+        if (!requests) {
+          errors.requests = 'There are no requests';
+          return res.status(404).json(errors);
+        }
+        res.json(requests);
+      })
+      .catch(err =>
+        res.status(404).json({ requests: 'Could not get requests' })
+      );
+  }
+);
 
 // TODO:
 // @route   POST api/pmanagers/pause

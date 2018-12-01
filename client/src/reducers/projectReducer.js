@@ -14,7 +14,9 @@ export default function(state = initialState, action) {
       };
     case GET_PROJECTS:
       return {
-        ...state
+        ...state,
+        projects: action.payload,
+        loading: false
       };
     default:
       return state;

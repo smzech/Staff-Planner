@@ -30,7 +30,7 @@ class Dashboard extends Component {
 
     return (
       <div className="dashboard">
-        <div className="cotainer">{dashboard}</div>
+        <div className="container">{dashboard}</div>
       </div>
     );
   }

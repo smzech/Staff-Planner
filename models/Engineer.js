@@ -27,6 +27,10 @@ const EngineerSchema = new Schema({
     type: Number,
     required: true,
     ref: 'functionalManagers' // ???
+  },
+  projects: {
+    type: [Number],
+    required: true
   }
 });
 

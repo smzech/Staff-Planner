@@ -22,7 +22,8 @@ import Assignment from './components/dashboard/fdash/Assignment';
 import EditAssignment from './components/dashboard/fdash/EditAssignment';
 
 // FM Components
-// ***TODO
+import ProjectRoster from './components/dashboard/pdash/ProjectRoster';
+import RequestForm from './components/dashboard/pdash/RequestForm';
 
 import './App.css';
 
@@ -81,6 +82,20 @@ class App extends Component {
                   exact
                   path="/edit-assignment"
                   component={EditAssignment}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/project-roster"
+                  component={ProjectRoster}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/request-form"
+                  component={RequestForm}
                 />
               </Switch>
             </div>
