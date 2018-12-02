@@ -64,6 +64,18 @@ export const getProjectAssignments = pid => dispatch => {
 };
 
 // Create (or Edit) Assignment
+export const createAssignment = (assignmentData, history) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post('api/fmanagers/assign', assignmentData)
+    .then(res => history.push('/dashboard'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 // Set loading state
 export const setAssignmentLoading = () => {

@@ -26,8 +26,8 @@ module.exports = function validateAssignmentInput(data) {
     }
     if (!Number.isInteger(task.hours)) {
       errors.hours = 'Requested hours must be an integer between 0 and 160';
-    } else if (task.hours < 1) {
-      errors.hours = 'Requested hours must be 1 or greater';
+    } else if (task.hours < 0) {
+      errors.hours = 'Requested hours must be 0 or greater';
     } else if (task.hours > 160) {
       errors.hours = 'Requested hours cannot be over 160';
     }

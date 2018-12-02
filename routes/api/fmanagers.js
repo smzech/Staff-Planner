@@ -243,8 +243,8 @@ router.post(
       tasks: req.body.tasks
     });
 
-    Assignment.findOne({ eid: req.body.eid, pid: req.body.pid }).then(
-      assignment => {
+    Assignment.findOne({ eid: req.body.eid, pid: req.body.pid })
+      .then(assignment => {
         if (assignment) {
           // Update Assignment
           console.log('ALREADY EXISTS...');
@@ -260,8 +260,10 @@ router.post(
             .save()
             .then(newEntry => res.json(newEntry));
         }
-      }
-    );
+      })
+      .catch(err =>
+        res.status(404).json({ assignment: 'Assignment query failed' })
+      );
   }
 );
 

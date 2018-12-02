@@ -3,9 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InputGroup from '../../common/InputGroup';
+import {
+  createAssignment,
+  clearErrors
+} from '../../../actions/assignmentActions';
 
 // FORM TO EDIT ASSIGNMENT
-// this.props.location.state.assignment
+// has access to: this.props.location.state.assignment
 class EditAssignment extends Component {
   constructor(props) {
     super(props);
@@ -33,8 +37,70 @@ class EditAssignment extends Component {
       errors: {}
     };
 
-    //this.onChange = this.onChange.bind(this);
-    //this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.clearErrors();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  // MUST BE EDITED
+  onSubmit(e) {
+    e.preventDefault();
+    const { assignment } = this.props.location.state;
+
+    // Tests...
+    // console.log(JSON.stringify(this.props.auth));
+    // console.log(this.props.auth.user.uid);
+
+    const assignmentData = {
+      eid: assignment.eid,
+      pid: assignment.pid,
+      name: assignment.name,
+      pmid: assignment.pmid,
+      tasks: [
+        {
+          month: 0,
+          hours: parseInt(this.state.month0)
+        },
+        {
+          month: 1,
+          hours: parseInt(this.state.month1)
+        },
+        {
+          month: 2,
+          hours: parseInt(this.state.month2)
+        },
+        {
+          month: 3,
+          hours: parseInt(this.state.month3)
+        },
+        {
+          month: 4,
+          hours: parseInt(this.state.month4)
+        },
+        {
+          month: 5,
+          hours: parseInt(this.state.month5)
+        }
+      ]
+    };
+
+    console.log(assignmentData);
+
+    // need history to push to dashboard in the actions file
+    this.props.createAssignment(assignmentData, this.props.history);
   }
 
   render() {
@@ -44,6 +110,11 @@ class EditAssignment extends Component {
     return (
       <div className="assignment edit">
         <div className="container">
+          {errors.hours && (
+            <div class="alert alert-danger" role="alert">
+              {errors.hours}
+            </div>
+          )}
           <h1 className="display-4">
             <span className="mr-3">Edit Assignment</span>
             <span>{assignment.name}</span>
@@ -115,4 +186,19 @@ class EditAssignment extends Component {
   }
 }
 
-export default EditAssignment;
+EditAssignment.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  createAssignment: PropTypes.func.isRequired,
+  clearErrors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { createAssignment, clearErrors }
+)(EditAssignment);
