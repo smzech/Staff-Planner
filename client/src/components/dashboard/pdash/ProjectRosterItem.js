@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 // import classnames from 'classnames';
 import { Link } from 'react-router-dom';
+import { makeDeleteRequest } from '../../../actions/requestActions';
 
 class ProjectRosterItem extends Component {
   createTasks = () => {
@@ -26,7 +27,7 @@ class ProjectRosterItem extends Component {
           <Link
             className="btn btn-success"
             to={{
-              pathname: '/request-form',
+              pathname: '/request-change',
               state: {
                 assignment: this.props.assignment
               }
@@ -36,13 +37,35 @@ class ProjectRosterItem extends Component {
           </Link>
         </span>
         <span>
-          <div className="btn btn-danger">delete</div>
+          <div
+            className="btn btn-danger"
+            onClick={this.onDeleteClick.bind(this)}
+          >
+            delete
+          </div>
         </span>
       </td>
     );
 
     return cols;
   };
+
+  onDeleteClick(e) {
+    e.preventDefault();
+    const { assignment } = this.props;
+
+    const requestData = {
+      eid: assignment.eid,
+      pid: assignment.pid,
+      returnid: this.props.auth.user.uid,
+      name: assignment.name,
+      reqtype: 'delete',
+      tasks: []
+    };
+
+    console.log(requestData);
+    this.props.makeDeleteRequest(requestData);
+  }
 
   render() {
     const { assignment } = this.props;
@@ -62,4 +85,18 @@ class ProjectRosterItem extends Component {
   }
 }
 
-export default ProjectRosterItem;
+ProjectRosterItem.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  makeDeleteRequest: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { makeDeleteRequest }
+)(ProjectRosterItem);

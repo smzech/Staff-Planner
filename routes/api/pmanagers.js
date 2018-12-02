@@ -204,6 +204,77 @@ router.post(
   }
 );
 
+// @route   POST api/pmanagers/delta-request
+// @desc    Make an DELTA request
+// @access  Private
+router.post(
+  '/delta-request',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateDeltaRequest(req.body);
+
+    // Check Validation return errors if any
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
+    const deltareq = {
+      eid: req.body.eid,
+      pid: req.body.pid,
+      returnid: req.body.returnid,
+      name: req.body.name,
+      reqtype: req.body.reqtype,
+      tasks: req.body.tasks
+    };
+
+    new Request(deltareq).save().then(request => res.json(request));
+  }
+);
+
+// @route   POST api/pmanagers/delete-request
+// @desc    Make an DELETE request
+// @access  Private
+router.post(
+  '/delete-request',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+
+    Request.findOne({
+      eid: req.body.eid,
+      pid: req.body.pid,
+      reqtype: req.body.reqtype
+    })
+      .then(request => {
+        // check if request exists already
+        if (request) {
+          console.log('delete request already exists');
+          errors.delete = 'There is already a delete request for this engineer';
+          return res.status(400).json(errors);
+        }
+
+        // create delete if no delete request found
+
+        const deleteReq = {
+          eid: req.body.eid,
+          pid: req.body.pid,
+          returnid: req.body.returnid,
+          name: req.body.name,
+          reqtype: req.body.reqtype,
+          tasks: []
+        };
+
+        new Request(deleteReq).save().then(request => res.json(request));
+      })
+      .catch(err =>
+        res.status(404).json({
+          delete: 'Delete request already exists'
+        })
+      );
+  }
+);
+
 // @route   POST api/pmanagers/outstanding
 // @desc    View requests
 // @access  Private
@@ -225,6 +296,22 @@ router.get(
       .catch(err =>
         res.status(404).json({ requests: 'Could not get requests' })
       );
+  }
+);
+
+// @route   POST api/pmanagers/remove-request
+// @desc    delete a request
+// @access  Private
+router.post(
+  '/remove-request',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+
+    console.log(req.body);
+    Request.findOneAndRemove({ _id: req.body.id }).then(() => {
+      res.json({ success: true });
+    });
   }
 );
 

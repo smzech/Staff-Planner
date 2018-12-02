@@ -44,8 +44,51 @@ export const makeInitRequest = (requestData, history) => dispatch => {
 };
 
 // create DELTA request
+export const makeDeltaRequest = (requestData, history) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post('api/pmanagers/delta-request', requestData)
+    .then(res => history.push('/dashboard'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
-// creat DELETE request
+// create DELETE request
+export const makeDeleteRequest = requestData => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post('api/pmanagers/delete-request', requestData)
+    .then(res => {})
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// delete a request
+export const deleteRequest = id => dispatch => {
+  console.log(id);
+  axios
+    .post('api/pmanagers/remove-request', id)
+    .then(res =>
+      dispatch({
+        type: DELETE_REQUEST,
+        payload: id.id
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 // Get Requests for FMs
 export const getRequests = () => dispatch => {
@@ -103,15 +146,15 @@ export const getOutstandingRequests = () => dispatch => {
     );
 };
 
-// Delete a Request
-export const deleteRequest = (id, history) => dispatch => {
+// Delete a Request,  for FMs
+export const rejectRequest = (id, history) => dispatch => {
   console.log(id);
   axios
     .post('api/fmanagers/delete-request', id)
     .then(res => {
       dispatch({
         type: DELETE_REQUEST,
-        payload: id
+        payload: id.id
       });
       history.push('/dashboard');
     })

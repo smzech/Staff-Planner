@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { deleteRequest } from '../../../actions/requestActions';
 
 class RequestItem extends Component {
+  onDeleteClick() {
+    const { request } = this.props;
+
+    const objID = {
+      id: request._id
+    };
+
+    this.props.deleteRequest(objID);
+  }
+
   render() {
     const { request } = this.props;
 
@@ -31,7 +44,7 @@ class RequestItem extends Component {
               <Link
                 className="btn btn-info mr-2"
                 to={{
-                  pathname: '/request-form',
+                  pathname: '/edit-request',
                   state: {
                     request: request
                   }
@@ -41,7 +54,12 @@ class RequestItem extends Component {
               </Link>
             </span>
             <span>
-              <div className="btn btn-danger">Delete</div>
+              <button
+                className="btn btn-danger"
+                onClick={this.onDeleteClick.bind(this)}
+              >
+                Delete
+              </button>
             </span>
           </div>
         </div>
@@ -50,4 +68,12 @@ class RequestItem extends Component {
   }
 }
 
-export default RequestItem;
+RequestItem.propTypes = {
+  request: PropTypes.object.isRequired,
+  deleteRequest: PropTypes.func.isRequired
+};
+
+export default connect(
+  null,
+  { deleteRequest }
+)(RequestItem);

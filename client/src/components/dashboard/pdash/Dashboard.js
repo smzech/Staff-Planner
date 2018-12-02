@@ -9,7 +9,7 @@ import { getProjects } from '../../../actions/projectActions';
 import { getOutstandingRequests } from '../../../actions/requestActions';
 import ProjectCard from './ProjectCard';
 import GlobalItem from './GlobalItem';
-import RequestCard from './RequestCard';
+import RequestItem from './RequestItem';
 
 // @name: PM DASHBOARD
 // @route: /dashboard
@@ -56,7 +56,7 @@ class Dashboard extends Component {
       requestContent = <Spinner />;
     } else {
       requestContent = requests.map(request => (
-        <RequestCard request={request} key={request._id} />
+        <RequestItem request={request} key={request._id} />
       ));
     }
 

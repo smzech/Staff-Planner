@@ -7,7 +7,7 @@ import AssignmentItem from './AssignmentItem';
 import RequestItem from './RequestItem';
 import { getAssignmentsByID } from '../../../actions/assignmentActions';
 import { getEngineer } from '../../../actions/engineerActions';
-import { deleteRequest } from '../../../actions/requestActions';
+import { rejectRequest } from '../../../actions/requestActions';
 
 // @name: Assignment View
 // @route: /assignment
@@ -83,7 +83,7 @@ class Assignment extends Component {
     const reqID = {
       id: _id
     };
-    this.props.deleteRequest(reqID, this.props.history);
+    this.props.rejectRequest(reqID, this.props.history);
   }
 
   render() {
@@ -161,7 +161,7 @@ Assignment.propTypes = {
   assignment: PropTypes.object.isRequired,
   getAssignmentsByID: PropTypes.func.isRequired,
   getEngineer: PropTypes.func.isRequired,
-  deleteRequest: PropTypes.func.isRequired
+  rejectRequest: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -172,5 +172,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getAssignmentsByID, getEngineer, deleteRequest }
+  { getAssignmentsByID, getEngineer, rejectRequest }
 )(Assignment);

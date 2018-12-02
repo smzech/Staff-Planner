@@ -7,6 +7,13 @@ import { getProjectAssignments } from '../../../actions/assignmentActions';
 import ProjectRosterItem from './ProjectRosterItem';
 
 class ProjectRoster extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      errors: {}
+    };
+  }
+
   componentDidMount() {
     const { project } = this.props.location.state;
     const prjID = {
@@ -15,7 +22,14 @@ class ProjectRoster extends Component {
     this.props.getProjectAssignments(prjID);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   render() {
+    const { errors } = this.state;
     const { project } = this.props.location.state;
     const { assignments, loading } = this.props.assignment;
 
@@ -35,6 +49,11 @@ class ProjectRoster extends Component {
     return (
       <div className="project-roster">
         <div className="container">
+          {errors.delete && (
+            <div class="alert alert-danger" role="alert">
+              {errors.delete}
+            </div>
+          )}
           <div className="row">
             <Link to="/dashboard" className="btn btn-light">
               Go Back

@@ -24,6 +24,8 @@ import EditAssignment from './components/dashboard/fdash/EditAssignment';
 // FM Components
 import ProjectRoster from './components/dashboard/pdash/ProjectRoster';
 import RequestForm from './components/dashboard/pdash/RequestForm';
+import DeltaRequestForm from './components/dashboard/pdash/DeltaRequestForm';
+import EditRequestForm from './components/dashboard/pdash/EditRequestForm';
 
 import './App.css';
 
@@ -96,6 +98,20 @@ class App extends Component {
                   exact
                   path="/request-form"
                   component={RequestForm}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/request-change"
+                  component={DeltaRequestForm}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/edit-request"
+                  component={EditRequestForm}
                 />
               </Switch>
             </div>

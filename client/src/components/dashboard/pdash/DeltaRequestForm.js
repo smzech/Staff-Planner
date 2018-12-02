@@ -5,13 +5,12 @@ import PropTypes from 'prop-types';
 import InputGroup from '../../common/InputGroup';
 import SelectListGroup from '../../common/SelectListGroup';
 import { getProjects } from '../../../actions/projectActions';
-import { makeInitRequest, clearErrors } from '../../../actions/requestActions';
+import { makeDeltaRequest } from '../../../actions/requestActions';
 
 class RequestForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      project: 0,
       month0: 0,
       month1: 0,
       month2: 0,
@@ -26,7 +25,6 @@ class RequestForm extends Component {
   }
 
   componentDidMount() {
-    this.props.clearErrors();
     this.props.getProjects();
   }
 
@@ -42,19 +40,19 @@ class RequestForm extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    const { engineer } = this.props.location.state;
-    const { projects } = this.props.project;
+    const { engineer } = this.props.location.state.assignment; // will be an array
+    const { assignment } = this.props.location.state;
 
     // Tests...
     // console.log(JSON.stringify(this.props.auth));
     // console.log(this.props.auth.user.uid);
 
     const requestData = {
-      eid: engineer.eid,
-      pid: parseInt(this.state.project),
+      eid: engineer[0].eid,
+      pid: parseInt(assignment.pid),
       returnid: this.props.auth.user.uid,
-      name: '',
-      reqtype: 'init',
+      name: assignment.name,
+      reqtype: 'delta',
       tasks: [
         {
           month: 0,
@@ -83,35 +81,15 @@ class RequestForm extends Component {
       ]
     };
 
-    // loop through projects to get name that matches PID
-    for (let i = 0; i < projects.length; i++) {
-      if (projects[i].pid == this.state.project) {
-        requestData.name = projects[i].name;
-      }
-    }
     // debug
     console.log(requestData);
 
     // need history to push to dashboard in the actions file
-    this.props.makeInitRequest(requestData, this.props.history);
+    this.props.makeDeltaRequest(requestData, this.props.history);
   }
 
   render() {
     const { errors } = this.state;
-    const { projects } = this.props.project;
-    const options = [
-      {
-        label: '* Select a project',
-        value: null
-      }
-    ];
-
-    projects.forEach(project => {
-      options.push({
-        label: project.name,
-        value: project.pid
-      });
-    });
 
     return (
       <div className="request-form">
@@ -126,36 +104,11 @@ class RequestForm extends Component {
               {errors.request}
             </div>
           )}
-          {errors.eid && (
-            <div class="alert alert-danger" role="alert">
-              {errors.eid}
-            </div>
-          )}
-          {errors.pid && (
-            <div class="alert alert-danger" role="alert">
-              {errors.pid}
-            </div>
-          )}
-          {errors.returnid && (
-            <div class="alert alert-danger" role="alert">
-              {errors.returnid}
-            </div>
-          )}
-          {errors.name && (
-            <div class="alert alert-danger" role="alert">
-              {errors.name}
-            </div>
-          )}
-          {errors.reqtype && (
-            <div class="alert alert-danger" role="alert">
-              {errors.reqtype}
-            </div>
-          )}
-          {errors.hours && (
+          {errors.hours ? (
             <div class="alert alert-danger" role="alert">
               {errors.hours}
             </div>
-          )}
+          ) : null}
           <div className="row">
             <Link to="/dashboard" className="btn btn-light">
               Go Back
@@ -164,16 +117,8 @@ class RequestForm extends Component {
           <h1 className="display-4">Request Form</h1>
           <br />
           <div className="col-md-8 m-au">
+            <small className="d-block pd-3">* = required fields</small>
             <form onSubmit={this.onSubmit}>
-              <SelectListGroup
-                placeholder="Project"
-                name="project"
-                value={this.state.project}
-                onChange={this.onChange}
-                options={options}
-                error={errors.status}
-                info="Select project"
-              />
               <small className="d-block pd-3">
                 month fields must be integers between 0 and 160
               </small>
@@ -243,7 +188,7 @@ RequestForm.propTypes = {
   errors: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
   getProjects: PropTypes.func.isRequired,
-  makeInitRequest: PropTypes.func.isRequired
+  makeDeltaRequest: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -254,5 +199,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProjects, makeInitRequest, clearErrors }
+  { getProjects, makeDeltaRequest }
 )(RequestForm);
