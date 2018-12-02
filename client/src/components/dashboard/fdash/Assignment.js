@@ -43,11 +43,12 @@ class Assignment extends Component {
         // loop through each task of this assignment, k is index of task of assignment
         for (let k = 0; k < assignments[j].tasks.length; k++) {
           if (assignments[j].tasks[k].month === i) {
+            // TODO: do not sum hours if project is part of delete request
             sum += assignments[j].tasks[k].hours;
           }
         }
       }
-      // get tasks from requests
+      // TODO: get tasks from requests, handle delta and init, skip if delete
       for (let k = 0; k < request.tasks.length; k++) {
         if (request.tasks[k].month === i) {
           sum += request.tasks[k].hours;

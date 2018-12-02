@@ -33,26 +33,33 @@ class ProjectRoster extends Component {
     }
 
     return (
-      <div>
-        <h3>Roster for project {project.name}</h3>
-        <br />
-        <div label="Roster">
-          <table class="table table-dark table-hover text-center">
-            <thead>
-              <tr>
-                <th scope="col">EID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Jan</th>
-                <th scope="col">Feb</th>
-                <th scope="col">Mar</th>
-                <th scope="col">Apr</th>
-                <th scope="col">May</th>
-                <th scope="col">Jun</th>
-                <th scope="col">Change</th>
-              </tr>
-            </thead>
-            <tbody>{rosterContent}</tbody>
-          </table>
+      <div className="project-roster">
+        <div className="container">
+          <div className="row">
+            <Link to="/dashboard" className="btn btn-light">
+              Go Back
+            </Link>
+          </div>
+          <h3 className="display-4">Roster for project {project.name}</h3>
+          <br />
+          <div label="Roster">
+            <table class="table table-dark table-hover text-center">
+              <thead>
+                <tr>
+                  <th scope="col">EID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Jan</th>
+                  <th scope="col">Feb</th>
+                  <th scope="col">Mar</th>
+                  <th scope="col">Apr</th>
+                  <th scope="col">May</th>
+                  <th scope="col">Jun</th>
+                  <th scope="col">Change</th>
+                </tr>
+              </thead>
+              <tbody>{rosterContent}</tbody>
+            </table>
+          </div>
         </div>
       </div>
     );

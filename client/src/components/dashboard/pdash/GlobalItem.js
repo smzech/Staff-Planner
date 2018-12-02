@@ -16,7 +16,15 @@ class GlobalItem extends Component {
         <td>{engineer.last}</td>
         <td>{engineer.dept}</td>
         <td>
-          <Link to="/request-form" className="btn btn-success">
+          <Link
+            to={{
+              pathname: '/request-form',
+              state: {
+                engineer: engineer
+              }
+            }}
+            className="btn btn-success"
+          >
             Request
           </Link>
         </td>

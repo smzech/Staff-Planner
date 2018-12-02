@@ -42,7 +42,6 @@ class ProjectCard extends Component {
 }
 
 ProjectCard.propTypes = {
-  request: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
 

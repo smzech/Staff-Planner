@@ -4,12 +4,15 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 // Load Validation
-const validateRequestInput = require('../../validation/request');
+const validateInitRequest = require('../../validation/init-request');
+const validateDeltaRequest = require('../../validation/delta-request');
+const validateDeleteRequest = require('../../validation/delete-request');
 
 // Load models
 const ProjectManager = require('../../models/ProjectManager');
 const Engineer = require('../../models/Engineer');
 const Assignment = require('../../models/Assignment');
+const Request = require('../../models/Request');
 
 router.get(
   '/test',
@@ -141,9 +144,65 @@ router.post(
   }
 );
 
-// @route   POST api/pmanagers/request
-// @desc    Make a request
+// @route   POST api/pmanagers/init-request
+// @desc    Make an INIT request
 // @access  Private
+router.post(
+  '/init-request',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    console.log(req.body);
+    const { errors, isValid } = validateInitRequest(req.body);
+
+    // Check Validation return errors if any
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
+    // Check if assignment exists already, can only make init requests if assignment doesn't already exist
+    Assignment.findOne({ eid: req.body.eid, pid: req.body.pid })
+      .then(assignment => {
+        if (assignment) {
+          errors.assignment = 'Engineer already assigned to this project';
+          return res.status(400).json(errors);
+        } else {
+          // Check if a request for this assignment has already been made
+          Request.findOne({ eid: req.body.eid, pid: req.body.pid })
+            .then(request => {
+              if (request) {
+                errors.request = 'Engineer already requested for this project';
+                return res.status(400).json(errors);
+              } else {
+                // save to save request
+                const newReq = {
+                  eid: req.body.eid,
+                  pid: req.body.pid,
+                  returnid: req.body.returnid,
+                  name: req.body.name,
+                  reqtype: req.body.reqtype,
+                  tasks: req.body.tasks
+                };
+
+                new Request(newReq)
+                  .save()
+                  .then(reqReturn => res.json(reqReturn));
+              }
+            })
+            .catch(err =>
+              res
+                .status(404)
+                .json({ request: 'Could not access requests for validation' })
+            );
+        }
+      })
+      .catch(err =>
+        res
+          .status(404)
+          .json({ assignment: 'Could not access assignments for validation' })
+      );
+  }
+);
 
 // @route   POST api/pmanagers/outstanding
 // @desc    View requests

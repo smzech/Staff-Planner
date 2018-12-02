@@ -55,7 +55,8 @@ class EngineerView extends Component {
     let totals = this.getTotals();
 
     if (assignmentsContent === null || loading) {
-      assignmentsContent = <Spinner />;
+      //assignmentsContent = <Spinner />;
+      assignmentsContent = null;
     } else {
       assignmentsContent = assignments.map(assignment => (
         <AssignmentItem assignment={assignment} key={assignment._id} />
@@ -70,9 +71,9 @@ class EngineerView extends Component {
               Go Back
             </Link>
           </div>
-          <h3>
+          <h3 className="display-4">
             <span className="mr-3">ASSIGNMENTS FOR:</span>
-            <span>{JSON.stringify(this.props.location.state.eid)}</span>
+            <span>{this.props.location.state.eid}</span>
           </h3>
           <table className="table table-hover text-center">
             <thead className="thead-dark">

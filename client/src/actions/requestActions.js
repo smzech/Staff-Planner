@@ -10,7 +10,7 @@ import {
   CLEAR_SUCCESS
 } from '../actions/types';
 
-// create vacation request (Engineers only)
+// create vacation request (Engineers only), a form of DELTA request
 export const makeVacationRequest = requestData => dispatch => {
   dispatch(clearErrors());
   axios
@@ -29,7 +29,23 @@ export const makeVacationRequest = requestData => dispatch => {
     );
 };
 
-// create request (PMs only)
+// create INIT request (PMs only)
+export const makeInitRequest = (requestData, history) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post('api/pmanagers/init-request', requestData)
+    .then(res => history.push('/dashboard'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// create DELTA request
+
+// creat DELETE request
 
 // Get Requests for FMs
 export const getRequests = () => dispatch => {

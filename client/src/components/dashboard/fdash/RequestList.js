@@ -31,7 +31,7 @@ class RequestList extends Component {
               Go Back
             </Link>
           </div>
-          <h3>REQUEST LIST</h3>
+          <h3 className="display-4">REQUEST LIST</h3>
           <br />
           {requestContent}
         </div>
