@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InputGroup from '../../common/InputGroup';
-import SelectListGroup from '../../common/SelectListGroup';
 import { getProjects } from '../../../actions/projectActions';
 import { makeDeltaRequest } from '../../../actions/requestActions';
 

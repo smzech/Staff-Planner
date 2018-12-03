@@ -5,7 +5,12 @@ import PropTypes from 'prop-types';
 import Spinner from '../../common/Spinner';
 import AssignmentItemReview from './AssignmentItemReview';
 import RequestItem from './RequestItem';
-import { getAssignmentsByID } from '../../../actions/assignmentActions';
+import {
+  getAssignmentsByID,
+  createAssignment,
+  deleteAssignment,
+  allocateVacation
+} from '../../../actions/assignmentActions';
 import { getEngineer } from '../../../actions/engineerActions';
 import { rejectRequest } from '../../../actions/requestActions';
 
@@ -44,15 +49,49 @@ class Assignment extends Component {
         // loop through each task of this assignment, k is index of task of assignment
         for (let k = 0; k < assignments[j].tasks.length; k++) {
           if (assignments[j].tasks[k].month === i) {
-            // TODO: do not sum hours if project is part of delete request
-            sum += assignments[j].tasks[k].hours;
+            // request type handling:
+            // @init: sum normally
+            // @delta: skip sum of the request assignment, sum will be handled by the request loop below
+            // @vacation: skip sum of if the assignment is vacation and there is a vacation request for this month
+            // @delete: do not sum at all
+
+            switch (request.reqtype) {
+              case 'init': {
+                sum += assignments[j].tasks[k].hours;
+                break;
+              }
+              case 'delta': {
+                if (assignments[j].pid !== request.pid) {
+                  sum += assignments[j].tasks[k].hours;
+                }
+                break;
+              }
+              case 'vacation': {
+                if (assignments[j].pid !== request.pid) {
+                  sum += assignments[j].tasks[k].hours;
+                } else if (!request.tasks.find(task => task.month === i)) {
+                  sum += assignments[j].tasks[k].hours;
+                }
+                break;
+              }
+              case 'delete': {
+                if (assignments[j].pid !== request.pid) {
+                  sum += assignments[j].tasks[k].hours;
+                }
+              }
+              default: {
+              }
+            }
           }
         }
       }
-      // TODO: get tasks from requests, handle delta and init, skip if delete
-      for (let k = 0; k < request.tasks.length; k++) {
-        if (request.tasks[k].month === i) {
-          sum += request.tasks[k].hours;
+
+      // loop through request tasks
+      if (request.reqtype !== 'delete') {
+        for (let k = 0; k < request.tasks.length; k++) {
+          if (request.tasks[k].month === i) {
+            sum += request.tasks[k].hours;
+          }
         }
       }
 
@@ -71,9 +110,79 @@ class Assignment extends Component {
 
   onAccept(e) {
     e.preventDefault();
+    const { request } = this.props.location.state;
 
-    // submit request as an assignment
-    this.state.test = 'SUBMIT';
+    // submit by request type
+    switch (request.reqtype) {
+      case 'init': {
+        this.sendInitDelta();
+        break;
+      }
+      case 'delta': {
+        this.sendInitDelta();
+        break;
+      }
+      case 'vacation': {
+        this.sendVacation();
+        break;
+      }
+      case 'delete': {
+        this.sendDelete();
+        break;
+      }
+      default: {
+      }
+    }
+  }
+
+  // @info: helper function accepting init or delta requests
+  sendInitDelta() {
+    const { request } = this.props.location.state;
+
+    const assignmentData = {
+      eid: request.eid,
+      pid: request.pid,
+      name: request.name,
+      pmid: request.returnid,
+      tasks: request.tasks
+    };
+
+    // submit assignment
+    this.props.createAssignment(assignmentData, this.props.history);
+    // delete that request
+    const { _id } = this.props.location.state.request;
+    const reqID = {
+      id: _id
+    };
+    this.props.rejectRequest(reqID, this.props.history);
+  }
+
+  // @info: helper function for accepting a delete request
+  sendDelete() {
+    const { request } = this.props.location.state;
+
+    this.props.deleteAssignment(request, this.props.history);
+
+    // delete that request
+    const { _id } = this.props.location.state.request;
+    const reqID = {
+      id: _id
+    };
+    this.props.rejectRequest(reqID, this.props.history);
+  }
+
+  // @info: helper function for accepting a vacation request
+  sendVacation() {
+    const { request } = this.props.location.state;
+
+    this.props.allocateVacation(request, this.props.history);
+
+    // delete that request
+    const { _id } = this.props.location.state.request;
+    const reqID = {
+      id: _id
+    };
+    this.props.rejectRequest(reqID, this.props.history);
   }
 
   onReject(e) {
@@ -87,6 +196,8 @@ class Assignment extends Component {
     this.props.rejectRequest(reqID, this.props.history);
   }
 
+  // ************************************************* //
+
   render() {
     const { request } = this.props.location.state;
     const { assignments, loading } = this.props.assignment;
@@ -98,7 +209,11 @@ class Assignment extends Component {
       assignmentsContent = <Spinner />;
     } else {
       assignmentsContent = assignments.map(assignment => (
-        <AssignmentItemReview assignment={assignment} key={assignment._id} />
+        <AssignmentItemReview
+          assignment={assignment}
+          request={request}
+          key={assignment._id}
+        />
       ));
     }
 
@@ -110,6 +225,10 @@ class Assignment extends Component {
       }
       case 'delta': {
         typeTitle = 'Change';
+        break;
+      }
+      case 'vacation': {
+        typeTitle = 'Vacation';
         break;
       }
       case 'delete': {
@@ -160,7 +279,9 @@ class Assignment extends Component {
             </thead>
             <tbody>
               {assignmentsContent}
-              <RequestItem request={request} />
+              {request.reqtype === 'init' ? (
+                <RequestItem request={request} />
+              ) : null}
             </tbody>
             <tfoot className="bg-info">
               <tr>
@@ -181,7 +302,10 @@ Assignment.propTypes = {
   assignment: PropTypes.object.isRequired,
   getAssignmentsByID: PropTypes.func.isRequired,
   getEngineer: PropTypes.func.isRequired,
-  rejectRequest: PropTypes.func.isRequired
+  rejectRequest: PropTypes.func.isRequired,
+  createAssignment: PropTypes.func.isRequired,
+  deleteAssignment: PropTypes.func.isRequired,
+  allocateVacation: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -192,5 +316,12 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getAssignmentsByID, getEngineer, rejectRequest }
+  {
+    getAssignmentsByID,
+    getEngineer,
+    rejectRequest,
+    createAssignment,
+    deleteAssignment,
+    allocateVacation
+  }
 )(Assignment);

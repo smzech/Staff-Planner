@@ -149,7 +149,7 @@ export const getOutstandingRequests = () => dispatch => {
 // Accept an incoming request, FM view
 //export const rejectRequest = (id, history) => dispatch => {
 
-// Delete a Request, FM rejecting an incoming request
+// Delete a Request, FM rejecting an incoming request or Accepting request and deleting request
 export const rejectRequest = (id, history) => dispatch => {
   console.log(id);
   axios

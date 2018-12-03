@@ -20,7 +20,6 @@ class ProjectRosterItem extends Component {
         cols[tasks[i].month] = <td>{tasks[i].hours}</td>;
     }
 
-    // NEED TO CHANGE THIS ROUTE
     cols.push(
       <td>
         <span className="mr-1">

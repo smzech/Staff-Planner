@@ -254,18 +254,52 @@ router.post(
   }
 );
 
-// @route   DELETE api/fmanagers/assign
-// @desc    Delete assignment
+// @route   POST api/fmanagers/vacation
+// @desc    allocate vacation hours
 // @access  Private
-router.delete(
-  '/assign',
+router.post(
+  '/vacation',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Assignment.findOneAndRemove({ eid: req.body.eid, pid: req.body.pid }).then(
-      () => {
+    console.log('month: ' + req.body.tasks[0].month);
+    console.log('hours: ' + req.body.tasks[0].hours);
+    Assignment.findOneAndUpdate(
+      {
+        eid: req.body.eid,
+        pid: req.body.pid,
+        'tasks.month': req.body.tasks[0].month
+      },
+      {
+        $set: {
+          'tasks.$.hours': req.body.tasks[0].hours
+        }
+      },
+      { new: true }
+    )
+      .then(assignment => {
+        res.json(assignment);
+      })
+      .catch(err => {
+        res.status(404).json({ vacation: 'Vacation update failed' });
+      });
+  }
+);
+
+// ***MIGHT NEED FIXING...
+// @route   POST api/fmanagers/delete-assignment
+// @desc    Delete assignment
+// @access  Private
+router.post(
+  '/delete-assignment',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Assignment.findOneAndRemove({ eid: req.body.eid, pid: req.body.pid })
+      .then(() => {
         res.json({ success: true });
-      }
-    );
+      })
+      .catch(err => {
+        res.status(404).json({ delete: 'Assignment delete failed' });
+      });
   }
 );
 

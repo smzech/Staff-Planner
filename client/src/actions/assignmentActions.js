@@ -77,6 +77,32 @@ export const createAssignment = (assignmentData, history) => dispatch => {
     );
 };
 
+// Delete an Assignment
+export const deleteAssignment = (assignmentData, history) => dispatch => {
+  axios
+    .post('api/fmanagers/delete-assignment', assignmentData)
+    .then(res => history.push('/dashboard'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Allocation Vacation
+export const allocateVacation = (vacationRequest, history) => dispatch => {
+  axios
+    .post('api/fmanagers/vacation', vacationRequest)
+    .then(res => history.push('/dashboard'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Set loading state
 export const setAssignmentLoading = () => {
   return {

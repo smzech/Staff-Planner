@@ -7,7 +7,16 @@ import { Link } from 'react-router-dom';
 // Same as Assignment Item but Edit button removed
 class AssignmentItem extends Component {
   createTasks = () => {
-    const { tasks } = this.props.assignment;
+    const { assignment } = this.props;
+    const { request } = this.props;
+    let tasks;
+    //const { tasks } = this.props.assignment;
+    if (assignment.pid === request.pid && request.reqtype === 'delta') {
+      tasks = this.props.request.tasks;
+    } else {
+      tasks = this.props.assignment.tasks;
+    }
+
     let cols = [];
 
     // zero load array
@@ -15,9 +24,19 @@ class AssignmentItem extends Component {
       cols.push(<td>0</td>);
     }
 
-    for (let i = 0; i < tasks.length; i++) {
-      if (tasks[i].month >= 0 && tasks[i].month < 6)
-        cols[tasks[i].month] = <td>{tasks[i].hours}</td>;
+    // skip if delete
+    if (request.reqtype !== 'delete') {
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].month >= 0 && tasks[i].month < 6)
+          cols[tasks[i].month] = <td>{tasks[i].hours}</td>;
+      }
+    }
+
+    // change vacation request Cell
+    if (assignment.pid === request.pid && request.reqtype === 'vacation') {
+      request.tasks.forEach(task => {
+        cols[task.month] = <td>{task.hours}</td>;
+      });
     }
 
     return cols;
@@ -25,10 +44,31 @@ class AssignmentItem extends Component {
 
   render() {
     const { assignment } = this.props;
+    const { request } = this.props;
     let tasks = this.createTasks();
+    let cellColor = '';
+
+    if (assignment.pid === request.pid) {
+      switch (request.reqtype) {
+        case 'delta': {
+          cellColor = 'RequestRow';
+          break;
+        }
+        case 'delete': {
+          cellColor = 'bg-danger';
+          break;
+        }
+        case 'vacation': {
+          cellColor = 'RequestRow';
+          break;
+        }
+        default: {
+        }
+      }
+    }
 
     return (
-      <tr>
+      <tr className={cellColor}>
         <th scope="row">{assignment.name}</th>
         {tasks}
       </tr>

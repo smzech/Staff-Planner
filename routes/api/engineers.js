@@ -82,8 +82,8 @@ router.post(
       eid: req.user.uid,
       pid: 777,
       returnid: req.user.uid,
-      name: 'vacation',
-      reqtype: 'delta',
+      name: 'Vacation',
+      reqtype: 'vacation',
       tasks: [
         {
           month: req.body.month,

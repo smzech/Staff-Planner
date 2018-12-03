@@ -41,19 +41,6 @@ class RequestItem extends Component {
               {request.eid}
             </p>
             <span>
-              <Link
-                className="btn btn-info mr-2"
-                to={{
-                  pathname: '/edit-request',
-                  state: {
-                    request: request
-                  }
-                }}
-              >
-                Edit
-              </Link>
-            </span>
-            <span>
               <button
                 className="btn btn-danger"
                 onClick={this.onDeleteClick.bind(this)}

@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 // import classnames from 'classnames';
 // import { Link } from 'react-router-dom';
 
+// @info: same as AssignmentItem Review but specifically as new item for inits
 class RequestItem extends Component {
   createTasks = () => {
     const { tasks } = this.props.request;
