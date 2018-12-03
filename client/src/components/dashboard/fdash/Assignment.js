@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Spinner from '../../common/Spinner';
-import AssignmentItem from './AssignmentItem';
+import AssignmentItemReview from './AssignmentItemReview';
 import RequestItem from './RequestItem';
 import { getAssignmentsByID } from '../../../actions/assignmentActions';
 import { getEngineer } from '../../../actions/engineerActions';
@@ -12,10 +12,11 @@ import { rejectRequest } from '../../../actions/requestActions';
 // @name: Assignment View
 // @route: /assignment
 // @desc: accept of reject an assignment for and engineer
+// @passed-props: request
 class Assignment extends Component {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onAccept = this.onAccept.bind(this);
     this.onReject = this.onReject.bind(this);
   }
 
@@ -68,7 +69,7 @@ class Assignment extends Component {
     return cols;
   };
 
-  onSubmit(e) {
+  onAccept(e) {
     e.preventDefault();
 
     // submit request as an assignment
@@ -97,8 +98,24 @@ class Assignment extends Component {
       assignmentsContent = <Spinner />;
     } else {
       assignmentsContent = assignments.map(assignment => (
-        <AssignmentItem assignment={assignment} key={assignment._id} />
+        <AssignmentItemReview assignment={assignment} key={assignment._id} />
       ));
+    }
+
+    let typeTitle = '';
+    switch (request.reqtype) {
+      case 'init': {
+        typeTitle = 'Initialization';
+        break;
+      }
+      case 'delta': {
+        typeTitle = 'Change';
+        break;
+      }
+      case 'delete': {
+        typeTitle = 'Delete';
+        break;
+      }
     }
 
     return (
@@ -110,9 +127,12 @@ class Assignment extends Component {
             </Link>
           </div>
           <h3>
-            <span className="mr-4">Review Request</span>
+            <span className="mr-4">{`Review ${typeTitle} Request`}</span>
             <span>
-              <button type="submit" className="btn btn-info text-center mr-2">
+              <button
+                onClick={this.onAccept}
+                className="btn btn-info text-center mr-2"
+              >
                 <i className="far fa-check-circle mr-2 align-middle" />
                 <b>Accept</b>
               </button>

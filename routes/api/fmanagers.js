@@ -20,20 +20,6 @@ router.get(
   (req, res) => {
     const errors = {};
 
-    // search engineer db by fm's ID
-    // Engineer.({ fmid: req.user.uid })
-    //   .then(engineers => {
-    //     if (!engineers) {
-    //       errors.engineers = 'No engineers on roster';
-    //       return res.status(404).json(errors);
-    //     }
-
-    //     res.json(engineers);
-    //   })
-    //   .catch(err =>
-    //     res.status(404).json({ engineers: 'No engineers on roster' })
-    //   );
-
     // search enginner db by fmid, aggregate eng's assignments into results
     Engineer.aggregate([
       {
@@ -124,6 +110,7 @@ router.post(
     const errors = {};
 
     Assignment.find({ eid: req.body.eid })
+      .sort({ pid: 1 })
       .then(assignments => {
         if (!assignments) {
           errors.assignments = 'No assignments found';

@@ -72,8 +72,9 @@ class EngineerView extends Component {
             </Link>
           </div>
           <h3 className="display-4">
-            <span className="mr-3">ASSIGNMENTS FOR:</span>
-            <span>{this.props.location.state.eid}</span>
+            <span className="mr-3">{`ASSIGNMENTS FOR: ${
+              this.props.location.state.eid
+            }`}</span>
           </h3>
           <table className="table table-hover text-center">
             <thead className="thead-dark">

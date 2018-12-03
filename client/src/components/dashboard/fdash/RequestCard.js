@@ -21,7 +21,7 @@ class RequestCard extends Component {
                 <b>Request Type:</b>
               </p>
               <p className="text-center">
-                {request.name === 'Vacation' ? 'Vacation' : request.reqtype}
+                {request.name === 'Vacation' ? 'vacation' : request.reqtype}
               </p>
             </div>
             <div className="col-md-10">

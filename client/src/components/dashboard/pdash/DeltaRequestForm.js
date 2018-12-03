@@ -10,13 +10,27 @@ import { makeDeltaRequest } from '../../../actions/requestActions';
 class RequestForm extends Component {
   constructor(props) {
     super(props);
+    const { assignment } = this.props.location.state;
+
     this.state = {
-      month0: 0,
-      month1: 0,
-      month2: 0,
-      month3: 0,
-      month4: 0,
-      month5: 0,
+      month0: assignment.tasks.find(task => task.month === 0)
+        ? assignment.tasks.find(task => task.month === 0).hours
+        : 0,
+      month1: assignment.tasks.find(task => task.month === 1)
+        ? assignment.tasks.find(task => task.month === 1).hours
+        : 0,
+      month2: assignment.tasks.find(task => task.month === 2)
+        ? assignment.tasks.find(task => task.month === 2).hours
+        : 0,
+      month3: assignment.tasks.find(task => task.month === 3)
+        ? assignment.tasks.find(task => task.month === 3).hours
+        : 0,
+      month4: assignment.tasks.find(task => task.month === 4)
+        ? assignment.tasks.find(task => task.month === 4).hours
+        : 0,
+      month5: assignment.tasks.find(task => task.month === 5)
+        ? assignment.tasks.find(task => task.month === 5).hours
+        : 0,
       errors: {}
     };
 

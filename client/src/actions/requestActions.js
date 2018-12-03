@@ -57,7 +57,7 @@ export const makeDeltaRequest = (requestData, history) => dispatch => {
     );
 };
 
-// create DELETE request
+// Create DELETE request from PM view
 export const makeDeleteRequest = requestData => dispatch => {
   dispatch(clearErrors());
   axios
@@ -71,7 +71,7 @@ export const makeDeleteRequest = requestData => dispatch => {
     );
 };
 
-// delete a request
+// PM deleting own request
 export const deleteRequest = id => dispatch => {
   console.log(id);
   axios
@@ -146,7 +146,10 @@ export const getOutstandingRequests = () => dispatch => {
     );
 };
 
-// Delete a Request,  for FMs
+// Accept an incoming request, FM view
+//export const rejectRequest = (id, history) => dispatch => {
+
+// Delete a Request, FM rejecting an incoming request
 export const rejectRequest = (id, history) => dispatch => {
   console.log(id);
   axios

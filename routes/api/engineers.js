@@ -82,7 +82,7 @@ router.post(
       eid: req.user.uid,
       pid: 777,
       returnid: req.user.uid,
-      name: 'Vacation',
+      name: 'vacation',
       reqtype: 'delta',
       tasks: [
         {
