@@ -251,6 +251,29 @@ router.post(
       .catch(err =>
         res.status(404).json({ assignment: 'Assignment query failed' })
       );
+
+    Engineer.findOne({ eid: req.body.eid })
+      .then(engineer => {
+        console.log(engineer.projects);
+        console.log('PROJ ID: ' + req.body.pid);
+        var arr = engineer.projects;
+        var exist = arr.find(elem => {
+          return elem === req.body.pid;
+        });
+        if (exist) {
+          console.log('FOUND');
+        } else {
+          console.log('NOT FOUND... updating');
+          arr.push(req.body.pid);
+          Engineer.findOneAndUpdate(
+            { eid: req.body.eid },
+            { $set: { projects: arr } }
+          ).then(result => {});
+        }
+      })
+      .catch(err =>
+        res.status(404).json({ engineer: 'Could not update engineer projects' })
+      );
   }
 );
 
@@ -295,7 +318,21 @@ router.post(
   (req, res) => {
     Assignment.findOneAndRemove({ eid: req.body.eid, pid: req.body.pid })
       .then(() => {
-        res.json({ success: true });
+        // remove pojectID from engineer
+        Engineer.findOne({ eid: req.body.eid })
+          .then(engineer => {
+            var arr = engineer.projects;
+            arr = arr.filter(e => e !== req.body.pid);
+            Engineer.findOneAndUpdate(
+              { eid: req.body.eid },
+              { $set: { projects: arr } }
+            ).then(result => res.json({ success: true }));
+          })
+          .catch(err =>
+            res
+              .status(404)
+              .json({ engineer: 'Could not update engineer projects' })
+          );
       })
       .catch(err => {
         res.status(404).json({ delete: 'Assignment delete failed' });

@@ -25,7 +25,7 @@ class AssignmentItem extends Component {
     }
 
     // skip if delete
-    if (request.reqtype !== 'delete') {
+    if (!(request.reqtype === 'delete' && assignment.pid === request.pid)) {
       for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].month >= 0 && tasks[i].month < 6)
           cols[tasks[i].month] = <td>{tasks[i].hours}</td>;
